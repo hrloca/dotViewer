@@ -71,6 +71,7 @@ export const DotList: FC<DotListProps> = ({ onSelect, onDelete }) => {
             <Button onClick={() => setDeleteIndex(null)}>Cancel</Button>
             <Button
               disabled={!is}
+              variant="contained"
               onClick={() => {
                 if (is) {
                   onDelete(deleteDotIndex)
