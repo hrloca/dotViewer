@@ -25,7 +25,7 @@ export const carouselIndex = atom<0 | 1>({
 })
 
 export const initializeState = ({ set }: MutableSnapshot) => {
-  const d = JSON.parse(localStorage.getItem('dots') || '')
+  const d = JSON.parse(localStorage.getItem('dots') || '[]')
   set(dots, [defaultDot].concat(d))
 }
 
