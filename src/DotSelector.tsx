@@ -8,6 +8,7 @@ import DialogContentText from '@material-ui/core/DialogContentText'
 import DialogTitle from '@material-ui/core/DialogTitle'
 import { SheetSelector } from './SheetSelector'
 import { useSelectorState, Phase } from './stateSelector'
+import { DotDrawer } from './DotDrawer'
 
 export type DotSelectorProps = {
   onSelect: (src: string, name: string) => void
@@ -23,10 +24,10 @@ export const DotSelector: FC<DotSelectorProps> = ({ onSelect }) => {
   return (
     <>
       <Dialog open={state.phase === Phase.SheetSelecting} onClose={idle}>
-        <DialogTitle>Save Dot File.</DialogTitle>
+        <DialogTitle>Save Dot Sheet File.</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            ドッドサイズ 32*32 のシートを選択してください。
+            ドッドサイズ 32*32, シートサイズ240*240 のシートを選択
           </DialogContentText>
           <Button variant="contained" component="label">
             Select
@@ -41,7 +42,8 @@ export const DotSelector: FC<DotSelectorProps> = ({ onSelect }) => {
       <Dialog open={state.phase === Phase.NameEditing} onClose={idle}>
         <DialogTitle>Dot Name.</DialogTitle>
         <DialogContent>
-          <DialogContentText>ドット名を決めてください。</DialogContentText>
+          <DialogContentText>ドット名を入力</DialogContentText>
+          <DotDrawer size={64} imgPath={state.src} reverse={false} y={0} x={4} />
           <TextField
             autoFocus
             margin="dense"
