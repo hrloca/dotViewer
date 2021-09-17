@@ -24,6 +24,7 @@ import AddIcon from '@material-ui/icons/Add'
 
 import { useSelectorState } from './stateSelector'
 import { useManegeDots } from './stateDots'
+import { DotDrawer } from './DotDrawer'
 
 const defaultSize = 128
 
@@ -32,7 +33,7 @@ export const DotViewer = () => {
   const { dots, setDot, removeDot } = useManegeDots()
 
   const [size, setSize] = useState(defaultSize)
-  const [motIndex, setMotIndex] = useState(3)
+  const [motIndex, setMotIndex] = useState(0)
   const [imagePath, setImagePath] = useState(dots[0].src)
   const { setIndex, length, index, next, prev } = useIndex(2, 0)
 
@@ -48,6 +49,7 @@ export const DotViewer = () => {
     <Box sx={{ pt: 7, pb: 7 }}>
       <AppBar sx={{ position: 'fixed', top: 0, left: 0, right: 0 }}>
         <Toolbar>
+          <DotDrawer size={32} imgPath={dots[0].src} reverse={false} y={2} x={1} />
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             Dot Viewer
           </Typography>
