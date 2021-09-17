@@ -1,0 +1,32 @@
+# name: Node.js Package
+# on:
+#   release:
+#     types: [created]
+# jobs:
+#   build:
+#     runs-on: ubuntu-latest 
+#     permissions: 
+#       contents: read
+#       packages: write 
+#     steps:
+#       - uses: actions/checkout@v2
+#       # npm に公開するように .npmrc ファイルを設定する
+#       - uses: actions/setup-node@v1
+#         with:
+#           node-version: '10.x'
+#           registry-url: 'https://registry.npmjs.org'
+#       - run: npm install
+#       # npm に公開する
+#       - run: npm publish --access public
+#         env:
+#           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+#       # .npmrc ファイルを設定して GitHub Packages に公開する
+#       - uses: actions/setup-node@v1
+#         with:
+#           registry-url: 'https://npm.pkg.github.com'
+#           # 既定値はワークフローファイルを所有するユーザまたは Organization
+#           scope: '@octocat'
+#       # GitHub Packages に公開する
+#       - run: npm publish
+#         env:
+#           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
