@@ -2,7 +2,7 @@
   "name": "dot viewr",
   "short_name": "dot viewr",
   "description": "dot viewr",
-  "start_url": "/",
+  "start_url": "/dotViewer",
   "background_color": "#ec407a",
   "theme_color": "#ec407a",
   "display": "standalone",
