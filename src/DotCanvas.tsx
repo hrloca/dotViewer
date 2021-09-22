@@ -162,27 +162,27 @@ export const DotCanvas: FC<DotCanvasProps> = ({ index, imgPath, size }) => {
   }, [imgPath, index, size])
 
   return (
-    <>
-      <div>
-        <canvas ref={ref} height={size} width={size} />
-        <div className={styles.controller}>
-          <Button onClick={() => an.current?.pause()}>
-            <PauseCircleFilled />
-          </Button>
-          <Button onClick={() => an.current?.resume()}>
-            <PlayCircleFilledIcon />
-          </Button>
-          <Button onClick={() => an.current?.next()}>
-            <SkipNext />
-          </Button>
-        </div>
+    <div>
+      <canvas ref={ref} height={size} width={size} />
+      <div className={styles.controller}>
+        <Button onClick={() => an.current?.pause()}>
+          <PauseCircleFilled />
+        </Button>
+        <Button onClick={() => an.current?.resume()}>
+          <PlayCircleFilledIcon />
+        </Button>
+        <Button onClick={() => an.current?.next()}>
+          <SkipNext />
+        </Button>
       </div>
-    </>
+    </div>
   )
 }
 
 const styles = {
   controller: css({
     position: 'absolute',
+    bottom: 8,
+    right: 8,
   }),
 }

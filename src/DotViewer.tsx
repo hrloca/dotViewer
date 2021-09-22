@@ -7,7 +7,6 @@ import { Carousel, CarouselItem, useIndex } from '@hrloca/swipii'
 
 import BottomNavigationAction from '@material-ui/core/BottomNavigationAction'
 import BottomNavigation from '@material-ui/core/BottomNavigation'
-import Slider from '@material-ui/core/Slider'
 import Button from '@material-ui/core/Button'
 import Paper from '@material-ui/core/Paper'
 import Box from '@material-ui/core/Box'
@@ -16,7 +15,9 @@ import Toolbar from '@material-ui/core/Toolbar'
 import Typography from '@material-ui/core/Typography'
 import IconButton from '@material-ui/core/IconButton'
 import Grid from '@material-ui/core/Grid'
-import { styled } from '@material-ui/core/styles'
+import Container from '@material-ui/core/Container'
+import { styled, useTheme } from '@material-ui/core/styles'
+import useMediaQuery from '@material-ui/core/useMediaQuery'
 
 import FormatListBulletedIcon from '@material-ui/icons/FormatListBulleted'
 import LocalMoviesIcon from '@material-ui/icons/LocalMovies'
@@ -29,10 +30,13 @@ import { DotDrawer } from './DotDrawer'
 const defaultSize = 128
 
 export const DotViewer = () => {
+  const theme = useTheme()
+  const matches = useMediaQuery(theme.breakpoints.up('md'))
+
   const { startSelectSheet } = useSelectorState()
   const { dots, setDot, removeDot } = useManegeDots()
 
-  const [size, setSize] = useState(defaultSize)
+  const [size] = useState(defaultSize)
   const [motIndex, setMotIndex] = useState(0)
   const [imagePath, setImagePath] = useState(dots[0].src)
   const { setIndex, length, index, next, prev } = useIndex(2, 0)
@@ -45,9 +49,54 @@ export const DotViewer = () => {
     })
   }
 
+  const actionList = animations.map((motion, i) => {
+    return (
+      <Grid item xs={6} md={3} key={motion.name}>
+        <Button fullWidth variant="contained" onClick={() => setMotIndex(i)}>
+          {motion.name}
+        </Button>
+      </Grid>
+    )
+  })
+
+  const display = (
+    <Canvas>
+      <DotCanvas size={size} imgPath={imagePath} index={motIndex} />
+    </Canvas>
+  )
+
+  const viewer = (
+    <>
+      <Box sx={{ m: 1 }}>{display}</Box>
+      <Box sx={{ ml: 1, mr: 1, overflowY: 'scroll' }}>
+        <Grid container spacing={1}>
+          {actionList}
+        </Grid>
+      </Box>
+    </>
+  )
+
+  const list = (
+    <DotList
+      onDelete={removeDot}
+      onSelect={(i) => {
+        setIndex(0)
+        setImagePath(dots[i].src)
+      }}
+    />
+  )
+
   return (
-    <Box sx={{ pt: 7, pb: 7 }}>
-      <AppBar sx={{ position: 'fixed', top: 0, left: 0, right: 0 }}>
+    <Container
+      disableGutters
+      maxWidth={false}
+      sx={{ pt: { xs: 7, sm: 8 } }}
+      style={{
+        width: '100vw',
+        height: '100vh',
+      }}
+    >
+      <AppBar>
         <Toolbar>
           <DotDrawer size={32} imgPath={dots[0].src} reverse={false} y={2} x={1} />
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
@@ -65,85 +114,65 @@ export const DotViewer = () => {
         </Toolbar>
       </AppBar>
 
-      <Carousel length={length} index={index} onNext={next} onPrev={prev}>
-        <CarouselItem
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            height: 'calc(100vh - 112px)',
-          }}
-        >
-          <Box sx={{ m: 1 }}>
-            <Display elevation={3}>
-              <Canvas>
-                <DotCanvas size={size} imgPath={imagePath} index={motIndex} />
-              </Canvas>
-              <Slider
-                orientation="vertical"
-                valueLabelDisplay="auto"
-                defaultValue={defaultSize}
-                step={64}
-                min={64}
-                max={256}
-                onChange={(_, val) => setSize(val as number)}
-                marks
-              />
-            </Display>
-          </Box>
-          <Box sx={{ m: 1, overflowY: 'scroll' }}>
-            <Grid container spacing={1}>
-              {animations.map((motion, i) => {
-                return (
-                  <Grid item xs={6} md={3} key={motion.name}>
-                    <Button fullWidth variant="contained" onClick={() => setMotIndex(i)}>
-                      {motion.name}
-                    </Button>
-                  </Grid>
-                )
-              })}
+      {!matches ? (
+        <>
+          <Carousel length={length} index={index} onNext={next} onPrev={prev}>
+            <CarouselItem
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                height: 'calc(100vh - 112px)',
+              }}
+            >
+              {viewer}
+            </CarouselItem>
+            <CarouselItem style={{ overflowY: 'scroll', height: 'calc(100vh - 112px)' }}>
+              {list}
+            </CarouselItem>
+          </Carousel>
+          <Paper sx={{ position: 'fixed', bottom: 0, left: 0, right: 0 }} elevation={3}>
+            <BottomNavigation
+              showLabels
+              value={index}
+              onChange={(_, newValue) => {
+                setIndex(newValue)
+              }}
+            >
+              <BottomNavigationAction label="view" icon={<LocalMoviesIcon />} />
+              <BottomNavigationAction label="dots" icon={<FormatListBulletedIcon />} />
+            </BottomNavigation>
+          </Paper>
+        </>
+      ) : (
+        <>
+          <Grid container spacing={2} style={{ height: '100%', flexShrink: 0 }}>
+            <Grid container item xs spacing={2}>
+              <Grid item m={1} xs={12}>
+                {display}
+              </Grid>
             </Grid>
-          </Box>
-        </CarouselItem>
-
-        <CarouselItem style={{ overflowY: 'scroll', height: 'calc(100vh - 112px)' }}>
-          <DotList
-            onDelete={removeDot}
-            onSelect={(i) => {
-              setIndex(0)
-              setImagePath(dots[i].src)
-            }}
-          />
-        </CarouselItem>
-      </Carousel>
+            <Grid style={{ width: 320, height: '100%', flexShrink: 0 }} item xs="auto">
+              <Box style={{ overflowY: 'scroll', height: '100%', flexShrink: 0 }}>
+                {list}
+                {list}
+                {list}
+              </Box>
+            </Grid>
+          </Grid>
+        </>
+      )}
 
       <DotSelector onSelect={selectDot} />
-
-      <Paper sx={{ position: 'fixed', bottom: 0, left: 0, right: 0 }} elevation={3}>
-        <BottomNavigation
-          showLabels
-          value={index}
-          onChange={(_, newValue) => {
-            setIndex(newValue)
-          }}
-        >
-          <BottomNavigationAction label="view" icon={<LocalMoviesIcon />} />
-          <BottomNavigationAction label="dots" icon={<FormatListBulletedIcon />} />
-        </BottomNavigation>
-      </Paper>
-    </Box>
+    </Container>
   )
 }
 
-const Display = styled(Paper)(() => ({
+const Canvas = styled(Paper)(() => ({
+  position: 'relative',
   display: 'flex',
+  width: '100%',
   alignItems: 'center',
   alignContent: 'center',
   justifyContent: 'center',
-  height: 320,
-}))
-
-const Canvas = styled('div')(() => ({
-  display: 'flex',
-  width: 320,
   height: 320,
 }))
