@@ -26,8 +26,6 @@ import { DotSelector } from './DotSelector'
 import { DotList } from './DotList'
 import { DotViewer } from './DotViewer'
 
-const defaultSize = 128
-
 export const Contents = () => {
   const theme = useTheme()
   const matches = useMediaQuery(theme.breakpoints.up('md'))
@@ -35,7 +33,6 @@ export const Contents = () => {
   const { startSelectSheet } = useSelectorState()
   const { dots, setDot, removeDot } = useManegeDots()
 
-  const [size] = useState(defaultSize)
   const [imagePath, setImagePath] = useState(dots[0].src)
   const { setIndex, length, index, next, prev } = useIndex(2, 0)
   const selectDot = (src: string, name: string) => {
@@ -76,7 +73,7 @@ export const Contents = () => {
     >
       <AppBar>
         <Toolbar>
-          <DotDrawer size={32} imgPath={dots[0].src} reverse={false} y={2} x={1} />
+          <DotDrawer size={32} src={dots[0].src} reverse={false} y={2} x={1} />
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             Dot Viewer
           </Typography>
@@ -102,7 +99,7 @@ export const Contents = () => {
                 height: 'calc(100vh - 112px)',
               }}
             >
-              <DotViewer size={size} imgPath={imagePath} />
+              <DotViewer src={imagePath} />
             </CarouselItem>
             <CarouselItem style={{ overflowY: 'scroll', height: 'calc(100vh - 112px)' }}>
               {list}
@@ -127,7 +124,7 @@ export const Contents = () => {
       ) : (
         <Grid container spacing={2} style={{ height: '100%', flexShrink: 0 }}>
           <Grid container direction="column" item xs={8}>
-            <DotViewer size={size} imgPath={imagePath} />
+            <DotViewer src={imagePath} />
           </Grid>
           <Grid style={{ height: '100%', flexShrink: 0 }} item xs={4}>
             <Box style={{ overflowY: 'scroll', height: '100%', flexShrink: 0 }}>

@@ -1,5 +1,4 @@
-import { useRef, useState } from 'react'
-import { atom } from 'recoil'
+import { useRef } from 'react'
 import { Frame, Animation } from './animations'
 
 function* iterateFrames(frames: Animation['frames']) {
@@ -16,7 +15,7 @@ interface DotAnimatorOption {
   onStop?: () => void
 }
 
-class DotAnimator {
+export class DotAnimator {
   isStop: boolean
   private timer: number
   private frames: Gen
@@ -99,23 +98,12 @@ class DotAnimator {
     this.option.onStop?.()
     this.exec(this.frames)
   }
+
+  onUpdate(onUpdate: (frame: Frame['coordinate']) => void) {
+    this.option.onUpdate = onUpdate
+  }
 }
 
-export const frames = atom<{ x: number; y: number } | null>({
-  key: 'animatorFrame',
-  default: null,
-})
-
-export const useDotAnimate = () => {
-  const [frame, setFrame] = useState<[number, number] | null>(null)
-  const animator = useRef(
-    new DotAnimator({
-      onUpdate: setFrame,
-    })
-  ).current
-
-  return {
-    frame,
-    animator,
-  }
+export const useDotAnimator = (option: DotAnimatorOption = {}) => {
+  return useRef(new DotAnimator(option)).current
 }

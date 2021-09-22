@@ -44,12 +44,12 @@ export class DotSheetDrawer implements Drawer {
 export interface DotDrawer {
   x: number
   y: number
-  imgPath: string
+  src: string
   reverse: boolean
   size: number
 }
 
-export const DotDrawer: FC<DotDrawer> = ({ reverse, x, y, imgPath, size }) => {
+export const DotDrawer: FC<DotDrawer> = ({ reverse, x, y, src: imgPath, size }) => {
   const ref = useRef<HTMLCanvasElement | null>(null)
 
   useEffect(() => {

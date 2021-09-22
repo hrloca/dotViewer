@@ -55,7 +55,7 @@ export const DotList: FC<DotListProps> = ({ onSelect, onDelete }) => {
                 }}
               >
                 <ListItemAvatar>
-                  <DotDrawer size={64} imgPath={item.src} reverse={false} y={0} x={4} />
+                  <DotDrawer size={64} src={item.src} reverse={false} y={0} x={4} />
                 </ListItemAvatar>
                 <ListItemText primary={item.name} />
               </ListItemButton>

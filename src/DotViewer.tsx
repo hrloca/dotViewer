@@ -1,37 +1,74 @@
-import React, { FC, useEffect } from 'react'
+import React, { FC, useEffect, useState } from 'react'
 
 import Button from '@material-ui/core/Button'
 import Paper from '@material-ui/core/Paper'
 import Box from '@material-ui/core/Box'
 import Grid from '@material-ui/core/Grid'
-import { styled } from '@material-ui/core/styles'
+import IconButton from '@material-ui/core/IconButton'
 
-import { DotDrawer } from './DotDrawer'
+import PauseCircleFilled from '@material-ui/icons/PauseCircleFilled'
+import PlayCircleFilledIcon from '@material-ui/icons/PlayCircleFilled'
+import SkipNext from '@material-ui/icons/SkipNext'
+
+import { styled } from '@material-ui/core/styles'
+import { DotAnimationCanvas } from './DotCanvas'
+import { useDotAnimator } from './stateAnimate'
 import { animations } from './animations'
-import { useDotAnimate } from './stateAnimate'
 
 interface DotDotViewerProps {
-  imgPath: string
-  size: number
+  src: string
 }
 
-export const DotViewer: FC<DotDotViewerProps> = ({ size, imgPath }) => {
-  const { animator, frame } = useDotAnimate()
-  if (!animator) return null
+const defaultSize = 128
+
+export const DotViewer: FC<DotDotViewerProps> = ({ src }) => {
+  const animator = useDotAnimator()
+  const initialAnimation = animations[0]
+  const [size] = useState(defaultSize)
 
   useEffect(() => {
-    animator.use(animations[0]).start()
+    animator.use(initialAnimation).start()
+    return () => {
+      animator.stop()
+    }
   }, [])
-
-  if (!frame) return null
-
-  const [x, y] = frame
 
   return (
     <>
       <Box sx={{ m: 1, height: 320 }}>
         <Canvas>
-          <DotDrawer size={size} imgPath={imgPath} reverse={false} x={x} y={y} />
+          <DotAnimationCanvas
+            initialAnimation={initialAnimation}
+            animator={animator}
+            size={size}
+            src={src}
+          />
+          <Grid
+            container
+            sx={{
+              justifyContent: 'right',
+              position: 'absolute',
+              bottom: 0,
+              left: 0,
+              right: 0,
+            }}
+          >
+            <Grid item>
+              <IconButton onClick={() => animator.pause()}>
+                <PauseCircleFilled />
+              </IconButton>
+            </Grid>
+            <Grid item>
+              <IconButton onClick={() => animator.resume()}>
+                <PlayCircleFilledIcon />
+              </IconButton>
+            </Grid>
+            <Grid item>
+              <IconButton onClick={() => animator.next()}>
+                <SkipNext />
+              </IconButton>
+            </Grid>
+          </Grid>
         </Canvas>
       </Box>
       <Box sx={{ ml: 1, mr: 1, overflowY: 'scroll' }}>
