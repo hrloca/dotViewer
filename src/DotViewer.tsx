@@ -52,11 +52,14 @@ export const DotViewer = () => {
 
   const actionList = animations.map((motion, i) => {
     return (
-      <Grid item xs={6} md={3} key={motion.name}>
-        <Button fullWidth variant="contained" onClick={() => setMotIndex(i)}>
-          {motion.name}
-        </Button>
-      </Grid>
+      <Button
+        key={motion.name}
+        fullWidth
+        variant="contained"
+        onClick={() => setMotIndex(i)}
+      >
+        {motion.name}
+      </Button>
     )
   })
 
@@ -68,10 +71,16 @@ export const DotViewer = () => {
 
   const viewer = (
     <>
-      <Box sx={{ m: 1 }}>{display}</Box>
+      <Box sx={{ m: 1, height: 320 }}>{display}</Box>
       <Box sx={{ ml: 1, mr: 1, overflowY: 'scroll' }}>
         <Grid container spacing={1}>
-          {actionList}
+          {actionList.map((action, i) => {
+            return (
+              <Grid item xs={6} sm={3} key={i}>
+                {action}
+              </Grid>
+            )
+          })}
         </Grid>
       </Box>
     </>
@@ -158,11 +167,21 @@ export const DotViewer = () => {
       ) : (
         <>
           <Grid container spacing={2} style={{ height: '100%', flexShrink: 0 }}>
-            <Grid container item xs={8} spacing={2}>
-              <Grid item m={1} xs={12}>
+            <Grid container direction="column" item xs={8}>
+              <Grid item m={1} style={{ height: 320 }}>
                 {display}
               </Grid>
-              {actionList}
+              <Box sx={{ ml: 1, mr: 1, overflowY: 'scroll' }}>
+                <Grid container spacing={1}>
+                  {actionList.map((action, i) => {
+                    return (
+                      <Grid item md={3} key={i}>
+                        {action}
+                      </Grid>
+                    )
+                  })}
+                </Grid>
+              </Box>
             </Grid>
             <Grid style={{ height: '100%', flexShrink: 0 }} item xs={4}>
               <Box style={{ overflowY: 'scroll', height: '100%', flexShrink: 0 }}>
@@ -182,8 +201,8 @@ const Canvas = styled(Paper)(() => ({
   position: 'relative',
   display: 'flex',
   width: '100%',
+  height: '100%',
   alignItems: 'center',
   alignContent: 'center',
   justifyContent: 'center',
-  height: 320,
 }))
