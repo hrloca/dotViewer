@@ -20,7 +20,12 @@ const theme = createTheme({
   },
 })
 
-injectGlobal`${reset}`
+injectGlobal`
+  ${reset}
+  body, html {
+    overflow: hidden;
+  }
+`
 
 const Root = () => {
   return (

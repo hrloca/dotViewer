@@ -149,6 +149,7 @@ export const DotViewer = () => {
               {list}
             </CarouselItem>
           </Carousel>
+
           <Paper sx={{ position: 'fixed', bottom: 0, left: 0, right: 0 }} elevation={3}>
             <SafeAreaView>
               <BottomNavigation
@@ -171,7 +172,7 @@ export const DotViewer = () => {
               <Grid item m={1} style={{ height: 320 }}>
                 {display}
               </Grid>
-              <Box sx={{ ml: 1, mr: 1, overflowY: 'scroll' }}>
+              <Grid sx={{ ml: 1, mr: 1, overflowY: 'scroll' }}>
                 <Grid container spacing={1}>
                   {actionList.map((action, i) => {
                     return (
@@ -181,7 +182,7 @@ export const DotViewer = () => {
                     )
                   })}
                 </Grid>
-              </Box>
+              </Grid>
             </Grid>
             <Grid style={{ height: '100%', flexShrink: 0 }} item xs={4}>
               <Box style={{ overflowY: 'scroll', height: '100%', flexShrink: 0 }}>
