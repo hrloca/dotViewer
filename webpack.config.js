@@ -1,4 +1,5 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+const { WebpackManifestPlugin } = require('webpack-manifest-plugin')
 const path = require('path')
 
 const config = {
@@ -15,6 +16,10 @@ const config = {
   plugins: [
     new HtmlWebpackPlugin({
       template: './src/index.html',
+    }),
+    new WebpackManifestPlugin({
+      fileName: path.join(__dirname, 'docs', 'build_manifest.json'),
+      publicPath: '',
     }),
   ],
   devServer: {
@@ -53,6 +58,14 @@ const config = {
             loader: 'file-loader',
           },
         ],
+      },
+      {
+        test: /manifest.json/,
+        loader: 'file-loader',
+        options: {
+          name: 'manifest.json',
+        },
+        type: 'javascript/auto',
       },
     ],
   },

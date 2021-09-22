@@ -25,6 +25,7 @@ export type DotListProps = {
 }
 
 export const DotList: FC<DotListProps> = ({ onSelect, onDelete }) => {
+  // TODO: separate list and delete fn.
   const [dotsList] = useRecoilState(dots)
   const [deleteDotIndex, setDeleteIndex] = useState<number | null>(null)
   const is = deleteDotIndex !== null

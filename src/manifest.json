@@ -1,0 +1,17 @@
+{
+  "name": "dot viewr",
+  "short_name": "dot viewr",
+  "description": "dot viewr",
+  "start_url": "/",
+  "background_color": "#ec407a",
+  "theme_color": "#ec407a",
+  "display": "standalone",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "64x64",
+      "type": "image/x-icon"
+    }
+  ]
+}
+

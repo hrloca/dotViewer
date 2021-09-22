@@ -7,6 +7,7 @@ import { reset } from './css'
 import { DotViewer } from './DotViewer'
 import { ThemeProvider, createTheme } from '@material-ui/core/styles'
 import { initializeState } from './stateDots'
+import './manifest.json'
 
 const theme = createTheme({
   palette: {

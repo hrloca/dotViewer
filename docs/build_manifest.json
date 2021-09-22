@@ -1,0 +1,5 @@
+{
+  "main.js": "bundle.js",
+  "manifest.json": "manifest.json",
+  "index.html": "index.html"
+}
