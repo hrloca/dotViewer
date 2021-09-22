@@ -99,8 +99,11 @@ export const DotViewer = () => {
       maxWidth={false}
       sx={{ pt: { xs: 7, sm: 8 } }}
       style={{
-        width: '100vw',
-        height: '100vh',
+        position: 'fixed',
+        top: 0,
+        bottom: 0,
+        left: 0,
+        right: 0,
       }}
     >
       <AppBar>
@@ -159,6 +162,7 @@ export const DotViewer = () => {
               <Grid item m={1} xs={12}>
                 {display}
               </Grid>
+              {actionList}
             </Grid>
             <Grid style={{ width: 320, height: '100%', flexShrink: 0 }} item xs="auto">
               <Box style={{ overflowY: 'scroll', height: '100%', flexShrink: 0 }}>
