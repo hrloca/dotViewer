@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { DotCanvas } from './DotCanvas'
 import { animations } from './animations'
 import { DotSelector } from './DotSelector'
@@ -85,6 +85,12 @@ export const DotViewer = () => {
       }}
     />
   )
+
+  useEffect(() => {
+    if (matches) {
+      setIndex(0)
+    }
+  }, [matches])
 
   return (
     <Container
