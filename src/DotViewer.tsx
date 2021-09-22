@@ -1,8 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { DotCanvas } from './DotCanvas'
-import { animations } from './animations'
-import { DotSelector } from './DotSelector'
-import { DotList } from './DotList'
+import { SafeAreaView } from 'react-native'
 import { Carousel, CarouselItem, useIndex } from '@hrloca/swipii'
 
 import BottomNavigationAction from '@material-ui/core/BottomNavigationAction'
@@ -26,6 +23,10 @@ import AddIcon from '@material-ui/icons/Add'
 import { useSelectorState } from './stateSelector'
 import { useManegeDots } from './stateDots'
 import { DotDrawer } from './DotDrawer'
+import { DotCanvas } from './DotCanvas'
+import { animations } from './animations'
+import { DotSelector } from './DotSelector'
+import { DotList } from './DotList'
 
 const defaultSize = 128
 
@@ -137,16 +138,18 @@ export const DotViewer = () => {
             </CarouselItem>
           </Carousel>
           <Paper sx={{ position: 'fixed', bottom: 0, left: 0, right: 0 }} elevation={3}>
-            <BottomNavigation
-              showLabels
-              value={index}
-              onChange={(_, newValue) => {
-                setIndex(newValue)
-              }}
-            >
-              <BottomNavigationAction label="view" icon={<LocalMoviesIcon />} />
-              <BottomNavigationAction label="dots" icon={<FormatListBulletedIcon />} />
-            </BottomNavigation>
+            <SafeAreaView>
+              <BottomNavigation
+                showLabels
+                value={index}
+                onChange={(_, newValue) => {
+                  setIndex(newValue)
+                }}
+              >
+                <BottomNavigationAction label="view" icon={<LocalMoviesIcon />} />
+                <BottomNavigationAction label="dots" icon={<FormatListBulletedIcon />} />
+              </BottomNavigation>
+            </SafeAreaView>
           </Paper>
         </>
       ) : (
