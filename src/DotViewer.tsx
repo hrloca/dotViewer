@@ -154,8 +154,6 @@ export const DotViewer = () => {
             <Grid style={{ width: 320, height: '100%', flexShrink: 0 }} item xs="auto">
               <Box style={{ overflowY: 'scroll', height: '100%', flexShrink: 0 }}>
                 {list}
-                {list}
-                {list}
               </Box>
             </Grid>
           </Grid>
