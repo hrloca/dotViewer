@@ -17,6 +17,7 @@ import DialogContent from '@material-ui/core/DialogContent'
 import DialogContentText from '@material-ui/core/DialogContentText'
 import DialogTitle from '@material-ui/core/DialogTitle'
 import Button from '@material-ui/core/Button'
+import ListSubheader from '@material-ui/core/ListSubheader'
 
 export type DotListProps = {
   onSelect: (index: number) => void
@@ -30,7 +31,7 @@ export const DotList: FC<DotListProps> = ({ onSelect, onDelete }) => {
 
   return (
     <>
-      <List>
+      <List subheader={<ListSubheader>Dot Items</ListSubheader>}>
         {dotsList.map((item, index) => (
           <React.Fragment key={`${index}-${item.name}`}>
             <ListItem
