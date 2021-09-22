@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { atom, useRecoilState, MutableSnapshot } from 'recoil'
+import { atom, useRecoilState } from 'recoil'
 import { dotsrc } from './default'
 
 export type Dot = {
@@ -9,7 +9,7 @@ export type Dot = {
 }
 
 const defaultDot: Dot = {
-  name: 'でふぉると',
+  name: 'デフォルト',
   src: dotsrc,
   edit: false,
 }
@@ -24,9 +24,8 @@ export const carouselIndex = atom<0 | 1>({
   default: 0,
 })
 
-export const initializeState = ({ set }: MutableSnapshot) => {
-  const d = JSON.parse(localStorage.getItem('dots') || '[]')
-  set(dots, [defaultDot].concat(d))
+export const defaultDots = (d: Dot) => {
+  return [defaultDot].concat(d)
 }
 
 export const useManegeDots = () => {

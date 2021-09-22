@@ -4,9 +4,9 @@ import { render } from 'react-dom'
 import { RecoilRoot } from 'recoil'
 import { injectGlobal } from '@emotion/css'
 import { reset } from './css'
-import { DotViewer } from './DotViewer'
+import { Contents } from './Contents'
 import { ThemeProvider, createTheme } from '@material-ui/core/styles'
-import { initializeState } from './stateDots'
+import { initializeState } from './initializeState'
 import './manifest.json'
 
 const theme = createTheme({
@@ -32,7 +32,7 @@ const Root = () => {
     <RecoilRoot initializeState={initializeState}>
       <ThemeProvider theme={theme}>
         <SafeAreaView>
-          <DotViewer />
+          <Contents />
         </SafeAreaView>
       </ThemeProvider>
     </RecoilRoot>
