@@ -1,56 +1,30 @@
-import React, { FC, useEffect, useRef } from 'react'
+import React, { FC, useEffect, useRef, useState } from 'react'
 
-type drawDotOption = {
-  size: number
+const resolveSheetCoordinate = (x: number, y: number): [number, number] => {
+  const sx = 8 + x * 48
+  const sy = 8 + y * 48
+  return [sx, sy]
 }
 
-interface Drawer {
-  draw([x, y]: [number, number], reverse: boolean): void
-}
-
-export class DotSheetDrawer implements Drawer {
-  constructor(
-    private readonly img: HTMLImageElement,
-    private readonly ctx: CanvasRenderingContext2D,
-    private readonly option: drawDotOption = { size: 32 }
-  ) {}
-
-  private resolveSheetCoordinate = (x: number, y: number): [number, number] => {
-    const sx = 8 + x * 48
-    const sy = 8 + y * 48
-    return [sx, sy]
+const draw =
+  (ctx: CanvasRenderingContext2D, img: HTMLImageElement, size = 32) =>
+  ([x, y]: [number, number]) => {
+    ctx.clearRect(0, 0, size, size)
+    ctx.imageSmoothingEnabled = false
+    ctx.drawImage(img, ...resolveSheetCoordinate(x, y), 32, 32, 0, 0, size, size)
   }
-
-  draw([x, y]: [number, number], reverse: boolean) {
-    const size = this.option.size
-    this.ctx.clearRect(0, 0, size, size)
-    this.ctx.imageSmoothingEnabled = false
-    this.ctx.drawImage(
-      this.img,
-      ...this.resolveSheetCoordinate(x, y),
-      32,
-      32,
-      0,
-      0,
-      size,
-      size
-    )
-    if (reverse) {
-      // TODO
-    }
-  }
-}
 
 export interface DotDrawer {
   x: number
   y: number
   src: string
-  reverse: boolean
+  reverse?: boolean
   size: number
 }
 
-export const DotDrawer: FC<DotDrawer> = ({ reverse, x, y, src: imgPath, size }) => {
+export const DotDrawer: FC<DotDrawer> = ({ reverse = false, x, y, src, size }) => {
   const ref = useRef<HTMLCanvasElement | null>(null)
+  const [drawer, setDrawer] = useState<ReturnType<typeof draw> | null>(null)
 
   useEffect(() => {
     const canvasEl: HTMLCanvasElement | null = ref.current
@@ -58,14 +32,22 @@ export const DotDrawer: FC<DotDrawer> = ({ reverse, x, y, src: imgPath, size }) 
     const ctx = canvasEl.getContext('2d')
     if (!ctx) return
     const img = new Image()
-    img.src = imgPath
+    img.src = src
 
-    const drawer = new DotSheetDrawer(img, ctx, { size })
-
+    const d = draw(ctx, img, size)
     img.onload = () => {
-      drawer.draw([x, y], reverse)
+      setDrawer(() => d)
     }
-  }, [imgPath, x, y, size, reverse])
+  }, [src, size])
 
-  return <canvas ref={ref} height={size} width={size} />
+  useEffect(() => {
+    if (!drawer) return
+    drawer([x, y])
+  }, [drawer, x, y, size, reverse])
+
+  return (
+    <div style={{ transform: reverse ? 'scale(-1, 1)' : undefined }}>
+      <canvas ref={ref} height={size} width={size} />
+    </div>
+  )
 }

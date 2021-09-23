@@ -12,7 +12,7 @@ type Gen = Generator<Frame, void, unknown>
 type GenT = Generator<Transition, void, unknown>
 
 interface DotAnimatorOption {
-  onUpdateFrame?: (frame: Frame['coordinate']) => void
+  onUpdateFrame?: (frame: Frame) => void
   onStart?: () => void
   onStop?: () => void
 }
@@ -34,7 +34,7 @@ export class DotAnimator {
       return g
     }
 
-    this.option.onUpdateFrame?.(g.value.coordinate)
+    this.option.onUpdateFrame?.(g.value)
 
     return g
   }
@@ -135,7 +135,7 @@ export class DotAnimator {
     this.exec(this.frames)
   }
 
-  onUpdateFrame(onUpdate: (frame: Frame['coordinate']) => void) {
+  onUpdateFrame(onUpdate: (frame: Frame) => void) {
     this.option.onUpdateFrame = onUpdate
   }
 }

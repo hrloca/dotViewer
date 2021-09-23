@@ -2,7 +2,7 @@ import React, { FC, useEffect, useState } from 'react'
 import { Animated } from 'react-native'
 import { DotDrawer } from './DotDrawer'
 import { DotAnimator } from './stateAnimate'
-import { Animation } from './animations'
+import { Animation, Frame } from './animations'
 
 interface DotAnimationCanvasProps {
   animator: DotAnimator
@@ -18,14 +18,15 @@ export const DotAnimationCanvas: FC<DotAnimationCanvasProps> = ({
   animator,
 }) => {
   const initialFrame = initialAnimation.frames[0]
-  const [frame, setFrame] = useState<[number, number]>(initialFrame.coordinate)
+  const [frame, setFrame] = useState<Frame>(initialFrame)
 
-  if (!frame) return null
-
-  const [x, y] = frame
+  const [x, y] = frame.coordinate
+  const reverse = frame.reverse
 
   useEffect(() => {
-    animator.onUpdateFrame(setFrame)
+    animator.onUpdateFrame((arg) => {
+      setFrame(arg)
+    })
   }, [])
 
   return (
@@ -37,7 +38,7 @@ export const DotAnimationCanvas: FC<DotAnimationCanvasProps> = ({
         ],
       }}
     >
-      <DotDrawer size={size} src={src} reverse={false} x={x} y={y} />
+      <DotDrawer size={size} src={src} reverse={reverse} x={x} y={y} />
     </Animated.View>
   )
 }
