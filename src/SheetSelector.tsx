@@ -12,6 +12,7 @@ export const SheetSelector: FC<SheetSelectorProps> = ({ onSelect }) => {
       reader.readAsDataURL(t)
       reader.addEventListener('load', (loadE) => {
         if (typeof loadE.target?.result !== 'string') throw new Error()
+        console.log(loadE.target?.result)
         onSelect(loadE.target?.result, t.name)
       })
     }
