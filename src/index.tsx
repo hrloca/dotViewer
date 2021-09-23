@@ -24,6 +24,7 @@ injectGlobal`
   ${reset}
   body, html {
     overflow: hidden;
+    background-color: #fafafa;
   }
 `
 

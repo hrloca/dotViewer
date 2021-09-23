@@ -36,6 +36,9 @@ export const DotList: FC<DotListProps> = ({ onSelect, onDelete }) => {
         {dotsList.map((item, index) => (
           <React.Fragment key={`${index}-${item.name}`}>
             <ListItem
+              style={{
+                backgroundColor: '#fff',
+              }}
               disablePadding
               secondaryAction={
                 item.edit ? (
