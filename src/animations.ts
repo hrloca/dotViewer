@@ -108,11 +108,19 @@ export const animations: Animation[] = [
     name: '行動決定(技)',
     loop: false,
     frames: [
-      { coordinate: [3, 1], duration: 70 },
-      { coordinate: [3, 1], duration: 70 },
-      { coordinate: [3, 0], duration: 70, reverse: true },
-      { coordinate: [2, 0], duration: 70 },
-      { coordinate: [4, 2], duration: 500 },
+      { coordinate: [4, 0], duration: 50 },
+      { coordinate: [3, 1], duration: 50 },
+      { coordinate: [3, 0], duration: 50, reverse: true },
+      { coordinate: [2, 0], duration: 50 },
+      { coordinate: [4, 2], duration: 300 },
+    ],
+  },
+  {
+    name: '行動決定(術)',
+    loop: false,
+    frames: [
+      { coordinate: [0, 1], duration: 100 },
+      { coordinate: [2, 2], duration: 300 },
     ],
   },
   {
@@ -133,11 +141,12 @@ export const animations: Animation[] = [
     name: '成長',
     loop: false,
     frames: [
-      { coordinate: [3, 1], duration: 70 },
-      { coordinate: [3, 1], duration: 70 },
-      { coordinate: [3, 0], duration: 70, reverse: true },
-      { coordinate: [2, 0], duration: 70 },
-      { coordinate: [4, 2], duration: 500 },
+      { coordinate: [0, 2], duration: 50 },
+      { coordinate: [2, 0], duration: 50 },
+      { coordinate: [0, 1], duration: 50, reverse: true },
+      { coordinate: [1, 1], duration: 50 },
+      { coordinate: [0, 1], duration: 50 },
+      { coordinate: [4, 2], duration: 300 },
     ],
   },
   {
@@ -153,64 +162,25 @@ export const animations: Animation[] = [
     name: '勝利',
     loop: false,
     transition: [
-      { value: { x: 0, y: -100 }, duration: 210, easing: Easing.out(Easing.cubic) },
+      {
+        value: { x: 0, y: -100 },
+        delay: 150,
+        duration: 210,
+        easing: Easing.out(Easing.cubic),
+      },
       { value: { x: 0, y: 0 }, duration: 210, easing: Easing.in(Easing.cubic) },
     ],
     frames: [
-      { coordinate: [3, 1], duration: 90 },
-      { coordinate: [3, 1], duration: 90 },
-      { coordinate: [3, 0], duration: 90, reverse: true },
-      { coordinate: [2, 0], duration: 90 },
-      { coordinate: [3, 1], duration: 90 },
-      { coordinate: [3, 0], duration: 90, reverse: true },
-      { coordinate: [4, 1], duration: 90 },
+      { coordinate: [4, 0], duration: 60 },
+      { coordinate: [4, 3], duration: 90 },
+      { coordinate: [3, 1], duration: 60 }, // jump
+      { coordinate: [3, 0], duration: 60, reverse: true },
+      { coordinate: [2, 0], duration: 60 },
+      { coordinate: [3, 0], duration: 60 }, // rev
+      { coordinate: [3, 1], duration: 60 },
+      { coordinate: [3, 0], duration: 60, reverse: true },
+      { coordinate: [2, 0], duration: 60 },
+      { coordinate: [4, 1], duration: 60 }, // done
     ],
   },
 ]
-
-/*
-  {
-    name: '歩き(後)',
-    roop: true,
-  },
-  {
-    name: '歩き(左)',
-    roop: true,
-  },
-  {
-    name: '歩き(右)',
-  },
-  {
-    name: '走り(前)',
-  },
-  {
-    name: '走り(後)',
-  },
-  {
-    name: '走り(左)',
-  },
-  {
-    name: '走り(右)',
-  },
-  {
-    name: '行動選択',
-  },
-  {
-    name: '行動決定(技)',
-  },
-  {
-    name: '行動決定(術)',
-  },
-  {
-    name: '術発動',
-  },
-  {
-    name: '成長',
-  },
-  {
-    name: '勝利',
-  },
-  {
-    name: 'ダメージ',
-  },
-*/

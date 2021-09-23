@@ -13,8 +13,6 @@ type GenT = Generator<Transition, void, unknown>
 
 interface DotAnimatorOption {
   onUpdateFrame?: (frame: Frame) => void
-  onStart?: () => void
-  onStop?: () => void
 }
 
 export class DotAnimator {
@@ -30,11 +28,10 @@ export class DotAnimator {
 
   private exec(gen: Gen) {
     const g = gen.next()
-    if (!g.value) {
+    if (g.value) {
+      this.option.onUpdateFrame?.(g.value)
       return g
     }
-
-    this.option.onUpdateFrame?.(g.value)
 
     return g
   }
@@ -103,7 +100,6 @@ export class DotAnimator {
     this.init()
     this.stop()
     this.isStop = false
-    this.option.onStart?.()
     this.updateFrame(this.frames)
     this.runTransform()
   }
@@ -122,6 +118,7 @@ export class DotAnimator {
       toValue: value.value,
       duration: value.duration,
       easing: value.easing,
+      delay: value.delay || 0,
       useNativeDriver: false,
     }).start(() => {
       this.updateTransform(gen)
@@ -131,8 +128,6 @@ export class DotAnimator {
   stop() {
     this.init()
     this.pause()
-    this.option.onStop?.()
-    this.exec(this.frames)
   }
 
   onUpdateFrame(onUpdate: (frame: Frame) => void) {

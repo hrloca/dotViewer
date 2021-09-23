@@ -24,9 +24,7 @@ export const DotAnimationCanvas: FC<DotAnimationCanvasProps> = ({
   const reverse = frame.reverse
 
   useEffect(() => {
-    animator.onUpdateFrame((arg) => {
-      setFrame(arg)
-    })
+    animator.onUpdateFrame(setFrame)
   }, [])
 
   return (
