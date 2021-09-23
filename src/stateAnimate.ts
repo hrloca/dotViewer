@@ -1,16 +1,18 @@
 import { useRef } from 'react'
-import { Frame, Animation } from './animations'
+import { Animated } from 'react-native'
+import { Frame, Animation, Transition } from './animations'
 
-function* iterateFrames(frames: Animation['frames']) {
-  for (const frame of frames) {
-    yield frame
+function* createIterater<T>(any: T[]) {
+  for (const a of any) {
+    yield a
   }
 }
 
 type Gen = Generator<Frame, void, unknown>
+type GenT = Generator<Transition, void, unknown>
 
 interface DotAnimatorOption {
-  onUpdate?: (frame: Frame['coordinate']) => void
+  onUpdateFrame?: (frame: Frame['coordinate']) => void
   onStart?: () => void
   onStop?: () => void
 }
@@ -19,8 +21,12 @@ export class DotAnimator {
   isStop: boolean
   private timer: number
   private frames: Gen
+  private transitions?: GenT
   private animation: Animation
-  constructor(private readonly option: DotAnimatorOption) {}
+  transitionValue: Animated.ValueXY
+  constructor(private readonly option: DotAnimatorOption) {
+    this.transitionValue = new Animated.ValueXY()
+  }
 
   private exec(gen: Gen) {
     const g = gen.next()
@@ -28,12 +34,12 @@ export class DotAnimator {
       return g
     }
 
-    this.option.onUpdate?.(g.value.coordinate)
+    this.option.onUpdateFrame?.(g.value.coordinate)
 
     return g
   }
 
-  private update(gen: Gen) {
+  private updateFrame(gen: Gen) {
     const { value } = this.exec(gen)
     if (!value) {
       if (this.animation.loop) {
@@ -44,17 +50,26 @@ export class DotAnimator {
     }
 
     this.timer = window.setTimeout(() => {
-      this.update(gen)
+      this.updateFrame(gen)
     }, value.duration)
   }
 
   private init() {
-    this.frames = iterateFrames(this.animation.frames)
+    this.frames = createIterater(this.animation.frames)
+    this.transitions = this.animation.transition
+      ? createIterater(this.animation.transition)
+      : undefined
+
+    Animated.timing(this.transitionValue, {
+      toValue: { x: 0, y: 0 },
+      duration: 0,
+      useNativeDriver: false,
+    }).start()
   }
 
   private run() {
     this.isStop = false
-    this.update(this.frames)
+    this.updateFrame(this.frames)
   }
 
   next() {
@@ -75,7 +90,7 @@ export class DotAnimator {
   resume() {
     if (!this.isStop) return
     this.isStop = false
-    this.update(this.frames)
+    this.updateFrame(this.frames)
   }
 
   use(animation: Animation) {
@@ -89,7 +104,28 @@ export class DotAnimator {
     this.stop()
     this.isStop = false
     this.option.onStart?.()
-    this.update(this.frames)
+    this.updateFrame(this.frames)
+    this.runTransform()
+  }
+
+  private runTransform() {
+    if (this.transitions) {
+      this.updateTransform(this.transitions)
+    }
+  }
+
+  private updateTransform(gen: GenT) {
+    const { value } = gen.next()
+    if (!value) return
+
+    Animated.timing(this.transitionValue, {
+      toValue: value.value,
+      duration: value.duration,
+      easing: value.easing,
+      useNativeDriver: false,
+    }).start(() => {
+      this.updateTransform(gen)
+    })
   }
 
   stop() {
@@ -99,8 +135,8 @@ export class DotAnimator {
     this.exec(this.frames)
   }
 
-  onUpdate(onUpdate: (frame: Frame['coordinate']) => void) {
-    this.option.onUpdate = onUpdate
+  onUpdateFrame(onUpdate: (frame: Frame['coordinate']) => void) {
+    this.option.onUpdateFrame = onUpdate
   }
 }
 

@@ -1,4 +1,5 @@
 import React, { FC, useEffect, useState } from 'react'
+import { Animated } from 'react-native'
 import { DotDrawer } from './DotDrawer'
 import { DotAnimator } from './stateAnimate'
 import { Animation } from './animations'
@@ -24,8 +25,19 @@ export const DotAnimationCanvas: FC<DotAnimationCanvasProps> = ({
   const [x, y] = frame
 
   useEffect(() => {
-    animator.onUpdate(setFrame)
+    animator.onUpdateFrame(setFrame)
   }, [])
 
-  return <DotDrawer size={size} src={src} reverse={false} x={x} y={y} />
+  return (
+    <Animated.View
+      style={{
+        transform: [
+          { translateX: animator.transitionValue.x },
+          { translateY: animator.transitionValue.y },
+        ],
+      }}
+    >
+      <DotDrawer size={size} src={src} reverse={false} x={x} y={y} />
+    </Animated.View>
+  )
 }

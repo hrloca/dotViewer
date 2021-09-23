@@ -11,7 +11,7 @@ import PlayCircleFilledIcon from '@material-ui/icons/PlayCircleFilled'
 import SkipNext from '@material-ui/icons/SkipNext'
 
 import { styled } from '@material-ui/core/styles'
-import { DotAnimationCanvas } from './DotCanvas'
+import { DotAnimationCanvas } from './DotAnimationCanvas'
 import { useDotAnimator } from './stateAnimate'
 import { animations } from './animations'
 
@@ -37,12 +37,14 @@ export const DotViewer: FC<DotDotViewerProps> = ({ src }) => {
     <>
       <Box sx={{ m: 1, height: 320 }}>
         <Canvas>
-          <DotAnimationCanvas
-            initialAnimation={initialAnimation}
-            animator={animator}
-            size={size}
-            src={src}
-          />
+          <Box sx={{ position: 'relative', top: 20 }}>
+            <DotAnimationCanvas
+              initialAnimation={initialAnimation}
+              animator={animator}
+              size={size}
+              src={src}
+            />
+          </Box>
           <Grid
             container
             sx={{
