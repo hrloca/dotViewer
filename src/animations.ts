@@ -1,6 +1,6 @@
 import { Animated, Easing } from 'react-native'
 
-const frame = (f: number) => 15 * f
+const frame = (f: number) => 16 * f
 
 export type Frame = {
   coordinate: [number, number]
