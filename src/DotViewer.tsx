@@ -1,4 +1,5 @@
 import React, { FC, useEffect, useState } from 'react'
+import { SafeAreaView } from 'react-native'
 
 import Button from '@material-ui/core/Button'
 import Paper from '@material-ui/core/Paper'
@@ -34,7 +35,7 @@ export const DotViewer: FC<DotDotViewerProps> = ({ src }) => {
   }, [])
 
   return (
-    <>
+    <SafeAreaView>
       <Box sx={{ m: 1, height: 320 }}>
         <Canvas>
           <Box sx={{ position: 'relative', top: 20 }}>
@@ -93,7 +94,7 @@ export const DotViewer: FC<DotDotViewerProps> = ({ src }) => {
           })}
         </Grid>
       </Box>
-    </>
+    </SafeAreaView>
   )
 }
 
