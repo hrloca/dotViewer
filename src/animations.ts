@@ -196,7 +196,7 @@ export const animations: Animation[] = [
         easing: Easing.out(Easing.sin),
       },
       {
-        value: { x: -50, y: 0 },
+        value: { x: -70, y: 0 },
         duration: frame(3),
         easing: Easing.in(Easing.sin),
       },
