@@ -1,5 +1,4 @@
 import React, { FC, useEffect, useState } from 'react'
-import { SafeAreaView } from 'react-native'
 
 import Button from '@material-ui/core/Button'
 import Paper from '@material-ui/core/Paper'
@@ -74,27 +73,25 @@ export const DotViewer: FC<DotDotViewerProps> = ({ src }) => {
           </Grid>
         </Canvas>
       </Box>
-      <Box sx={{ ml: 1, mr: 1, overflowY: 'scroll' }}>
-        <SafeAreaView>
-          <Grid container spacing={1}>
-            {animations.map((a) => {
-              return (
-                <Grid item xs={6} sm={3} key={a.name}>
-                  <Button
-                    key={a.name}
-                    fullWidth
-                    variant="contained"
-                    onClick={() => {
-                      animator.use(a).start()
-                    }}
-                  >
-                    {a.name}
-                  </Button>
-                </Grid>
-              )
-            })}
-          </Grid>
-        </SafeAreaView>
+      <Box sx={{ height: 180, ml: 1, mr: 1, overflowY: 'scroll' }}>
+        <Grid container spacing={1}>
+          {animations.map((a) => {
+            return (
+              <Grid item xs={6} sm={3} key={a.name}>
+                <Button
+                  key={a.name}
+                  fullWidth
+                  variant="contained"
+                  onClick={() => {
+                    animator.use(a).start()
+                  }}
+                >
+                  {a.name}
+                </Button>
+              </Grid>
+            )
+          })}
+        </Grid>
       </Box>
     </>
   )
