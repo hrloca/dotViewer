@@ -35,7 +35,7 @@ export const DotViewer: FC<DotDotViewerProps> = ({ src }) => {
   }, [])
 
   return (
-    <SafeAreaView>
+    <>
       <Box sx={{ m: 1, height: 320 }}>
         <Canvas>
           <Box sx={{ position: 'relative', top: 20 }}>
@@ -75,26 +75,28 @@ export const DotViewer: FC<DotDotViewerProps> = ({ src }) => {
         </Canvas>
       </Box>
       <Box sx={{ ml: 1, mr: 1, overflowY: 'scroll' }}>
-        <Grid container spacing={1}>
-          {animations.map((a) => {
-            return (
-              <Grid item xs={6} sm={3} key={a.name}>
-                <Button
-                  key={a.name}
-                  fullWidth
-                  variant="contained"
-                  onClick={() => {
-                    animator.use(a).start()
-                  }}
-                >
-                  {a.name}
-                </Button>
-              </Grid>
-            )
-          })}
-        </Grid>
+        <SafeAreaView>
+          <Grid container spacing={1}>
+            {animations.map((a) => {
+              return (
+                <Grid item xs={6} sm={3} key={a.name}>
+                  <Button
+                    key={a.name}
+                    fullWidth
+                    variant="contained"
+                    onClick={() => {
+                      animator.use(a).start()
+                    }}
+                  >
+                    {a.name}
+                  </Button>
+                </Grid>
+              )
+            })}
+          </Grid>
+        </SafeAreaView>
       </Box>
-    </SafeAreaView>
+    </>
   )
 }
 
