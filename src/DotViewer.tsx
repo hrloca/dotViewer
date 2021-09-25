@@ -19,7 +19,7 @@ interface DotDotViewerProps {
   src: string
 }
 
-const defaultSize = 128
+const defaultSize = 96
 
 export const DotViewer: FC<DotDotViewerProps> = ({ src }) => {
   const animator = useDotAnimator()
