@@ -2,7 +2,7 @@ import { Animated, Easing } from 'react-native'
 
 const frame = (f: number) => 16 * f
 const value = (b: number) => (c: number) => b + c
-const motion = value(50)
+const motion = value(60)
 
 export type Frame = {
   coordinate: [number, number]
@@ -193,12 +193,12 @@ export const animations: Animation[] = [
     transition: [
       {
         value: { x: motion(0), y: 0 },
-        duration: frame(0),
+        duration: frame(4),
         easing: Easing.out(Easing.sin),
       },
       {
         value: { x: motion(-25), y: -10 },
-        delay: 400,
+        delay: frame(24),
         duration: frame(3),
         easing: Easing.out(Easing.sin),
       },
@@ -263,7 +263,7 @@ export const animations: Animation[] = [
       },
     ],
     frames: [
-      { coordinate: [4, 1], duration: 400 },
+      { coordinate: [4, 1], duration: frame(28) },
       { coordinate: [2, 3], duration: frame(6) }, // Jump
       { coordinate: [0, 2], duration: frame(3) }, // ReadySword, Landing
       { coordinate: [4, 1], duration: frame(6) }, // HoldSword
