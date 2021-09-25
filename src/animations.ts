@@ -1,6 +1,8 @@
 import { Animated, Easing } from 'react-native'
 
 const frame = (f: number) => 16 * f
+const value = (b: number) => (c: number) => b + c
+const motion = value(50)
 
 export type Frame = {
   coordinate: [number, number]
@@ -190,67 +192,72 @@ export const animations: Animation[] = [
     loop: false,
     transition: [
       {
-        value: { x: -25, y: -10 },
+        value: { x: motion(0), y: 0 },
+        duration: frame(0),
+        easing: Easing.out(Easing.sin),
+      },
+      {
+        value: { x: motion(-25), y: -10 },
         delay: 400,
         duration: frame(3),
         easing: Easing.out(Easing.sin),
       },
       {
-        value: { x: -70, y: 0 },
+        value: { x: motion(-70), y: 0 },
         duration: frame(3),
         easing: Easing.in(Easing.sin),
       },
       {
-        value: { x: -10, y: 0 },
+        value: { x: motion(-10), y: 0 },
         delay: frame(9),
         duration: frame(9),
         easing: Easing.out(Easing.sin),
       },
       {
-        value: { x: -100, y: 0 },
+        value: { x: motion(-100), y: 0 },
         duration: frame(12),
         easing: Easing.out(Easing.sin),
       },
       {
-        value: { x: -50, y: -100 },
+        value: { x: motion(-50), y: -100 },
         delay: frame(6),
         duration: frame(6),
         easing: Easing.out(Easing.sin),
       },
       {
-        value: { x: 0, y: 0 },
+        value: { x: motion(0), y: 0 },
         duration: frame(6),
         easing: Easing.in(Easing.sin),
       },
       {
-        value: { x: -50, y: -100 },
+        value: { x: motion(-50), y: -100 },
         delay: frame(3),
         duration: frame(6),
         easing: Easing.out(Easing.sin),
       },
       {
-        value: { x: -100, y: 0 },
+        value: { x: motion(-100), y: 0 },
         duration: frame(6),
         easing: Easing.in(Easing.sin),
       },
       {
-        value: { x: -120, y: 0 },
+        value: { x: motion(-120), y: 0 },
         duration: frame(4),
         easing: Easing.in(Easing.sin),
       },
       {
-        value: { x: -60, y: -150 },
+        value: { x: motion(-50), y: -150 },
         delay: frame(6),
         duration: frame(9),
         easing: Easing.in(Easing.sin),
       },
       {
-        value: { x: -0, y: 0 },
+        value: { x: motion(-10), y: 0 },
         duration: frame(9),
         easing: Easing.in(Easing.sin),
       },
       {
-        value: { x: 10, y: 0 },
+        value: { x: motion(0), y: 0 },
         duration: frame(6),
         easing: Easing.in(Easing.sin),
       },
