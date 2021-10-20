@@ -10,8 +10,8 @@ export type Frame = {
   reverse?: boolean
 }
 
-export type Transition = {
-  value: { x: number; y: number }
+export type TransitionOld = {
+  toValue: { x: number; y: number }
   duration: number
   delay?: number
   easing?: Animated.TimingAnimationConfig['easing']
@@ -22,8 +22,18 @@ export type Animation = {
   loop: boolean
   frames: Frame[]
   reverse?: boolean
-  transition?: Transition[]
+  transition?: TransitionOld[]
   weapons?: Frame[]
+}
+
+export type Transition = Omit<Animated.TimingAnimationConfig, 'useNativeDriver'>
+
+export type Transform = {
+  translateX: Transition[]
+  translateY: Transition[]
+  rotate: Transition[]
+  scaleX: Transition[]
+  scaleY: Transition[]
 }
 
 export const animations: Animation[] = [
@@ -157,8 +167,8 @@ export const animations: Animation[] = [
     name: 'ダメージ',
     loop: false,
     transition: [
-      { value: { x: 10, y: 0 }, duration: frame(6), easing: Easing.in(Easing.sin) },
-      { value: { x: 0, y: 0 }, duration: frame(6), easing: Easing.out(Easing.sin) },
+      { toValue: { x: 10, y: 0 }, duration: frame(6), easing: Easing.in(Easing.sin) },
+      { toValue: { x: 0, y: 0 }, duration: frame(6), easing: Easing.out(Easing.sin) },
     ],
     frames: [{ coordinate: [3, 3], duration: frame(24) }],
   },
@@ -167,12 +177,12 @@ export const animations: Animation[] = [
     loop: false,
     transition: [
       {
-        value: { x: 0, y: -100 },
+        toValue: { x: 0, y: -100 },
         delay: frame(14),
         duration: frame(14),
         easing: Easing.out(Easing.cubic),
       },
-      { value: { x: 0, y: 0 }, duration: frame(14), easing: Easing.in(Easing.cubic) },
+      { toValue: { x: 0, y: 0 }, duration: frame(14), easing: Easing.in(Easing.cubic) },
     ],
     frames: [
       { coordinate: [4, 0], duration: frame(4) },
@@ -192,72 +202,72 @@ export const animations: Animation[] = [
     loop: false,
     transition: [
       {
-        value: { x: motion(0), y: 0 },
+        toValue: { x: motion(0), y: 0 },
         duration: frame(4),
         easing: Easing.out(Easing.sin),
       },
       {
-        value: { x: motion(-25), y: -10 },
+        toValue: { x: motion(-25), y: -10 },
         delay: frame(24),
         duration: frame(3),
         easing: Easing.out(Easing.sin),
       },
       {
-        value: { x: motion(-70), y: 0 },
+        toValue: { x: motion(-70), y: 0 },
         duration: frame(3),
         easing: Easing.in(Easing.sin),
       },
       {
-        value: { x: motion(-10), y: 0 },
+        toValue: { x: motion(-10), y: 0 },
         delay: frame(9),
         duration: frame(9),
         easing: Easing.out(Easing.sin),
       },
       {
-        value: { x: motion(-100), y: 0 },
+        toValue: { x: motion(-100), y: 0 },
         duration: frame(12),
         easing: Easing.out(Easing.sin),
       },
       {
-        value: { x: motion(-50), y: -100 },
+        toValue: { x: motion(-50), y: -100 },
         delay: frame(6),
         duration: frame(6),
         easing: Easing.out(Easing.sin),
       },
       {
-        value: { x: motion(0), y: 0 },
+        toValue: { x: motion(0), y: 0 },
         duration: frame(6),
         easing: Easing.in(Easing.sin),
       },
       {
-        value: { x: motion(-50), y: -100 },
+        toValue: { x: motion(-50), y: -100 },
         delay: frame(3),
         duration: frame(6),
         easing: Easing.out(Easing.sin),
       },
       {
-        value: { x: motion(-100), y: 0 },
+        toValue: { x: motion(-100), y: 0 },
         duration: frame(6),
         easing: Easing.in(Easing.sin),
       },
       {
-        value: { x: motion(-120), y: 0 },
+        toValue: { x: motion(-120), y: 0 },
         duration: frame(4),
         easing: Easing.in(Easing.sin),
       },
       {
-        value: { x: motion(-50), y: -150 },
+        toValue: { x: motion(-50), y: -150 },
         delay: frame(6),
         duration: frame(9),
         easing: Easing.in(Easing.sin),
       },
       {
-        value: { x: motion(-10), y: 0 },
+        toValue: { x: motion(-10), y: 0 },
         duration: frame(9),
         easing: Easing.in(Easing.sin),
       },
       {
-        value: { x: motion(0), y: 0 },
+        toValue: { x: motion(0), y: 0 },
         duration: frame(6),
         easing: Easing.in(Easing.sin),
       },

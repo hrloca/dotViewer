@@ -6,9 +6,8 @@ import Box from '@material-ui/core/Box'
 import Grid from '@material-ui/core/Grid'
 import IconButton from '@material-ui/core/IconButton'
 
-import PauseCircleFilled from '@material-ui/icons/PauseCircleFilled'
-import PlayCircleFilledIcon from '@material-ui/icons/PlayCircleFilled'
-import SkipNext from '@material-ui/icons/SkipNext'
+import StopCircleIcon from '@material-ui/icons/StopCircle'
+import PlayCircleIcon from '@material-ui/icons/PlayCircle'
 
 import { styled } from '@material-ui/core/styles'
 import { DotAnimationCanvas } from './DotAnimationCanvas'
@@ -23,13 +22,14 @@ const defaultSize = 96
 
 export const DotViewer: FC<DotDotViewerProps> = ({ src }) => {
   const animator = useDotAnimator()
-  const initialAnimation = animations[0]
+  const { action, state } = animator
+  const initialAnimation = animations[2]
   const [size] = useState(defaultSize)
 
   useEffect(() => {
-    animator.use(initialAnimation).start()
+    action.use(initialAnimation)
     return () => {
-      animator.stop()
+      action.stop()
     }
   }, [])
 
@@ -56,18 +56,17 @@ export const DotViewer: FC<DotDotViewerProps> = ({ src }) => {
             }}
           >
             <Grid item>
-              <IconButton onClick={() => animator.pause()}>
-                <PauseCircleFilled />
-              </IconButton>
-            </Grid>
-            <Grid item>
-              <IconButton onClick={() => animator.resume()}>
-                <PlayCircleFilledIcon />
-              </IconButton>
-            </Grid>
-            <Grid item>
-              <IconButton onClick={() => animator.next()}>
-                <SkipNext />
+              <IconButton
+                color="primary"
+                onClick={() => {
+                  if (state === 'stop') {
+                    action.play()
+                  } else {
+                    action.stop()
+                  }
+                }}
+              >
+                {state === 'stop' ? <PlayCircleIcon /> : <StopCircleIcon />}
               </IconButton>
             </Grid>
           </Grid>
@@ -83,7 +82,8 @@ export const DotViewer: FC<DotDotViewerProps> = ({ src }) => {
                   fullWidth
                   variant="contained"
                   onClick={() => {
-                    animator.use(a).start()
+                    action.use(a)
+                    action.play()
                   }}
                 >
                   {a.name}

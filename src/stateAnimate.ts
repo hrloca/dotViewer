@@ -1,140 +1,73 @@
-import { useRef } from 'react'
+import { useRef, useState, useEffect } from 'react'
 import { Animated } from 'react-native'
-import { Frame, Animation, Transition } from './animations'
+import { TransformAnimator, DotAnimator, DotAnimatorOption } from './DotAnimator'
+import { Frame, Animation } from './animations'
 
-function* createIterater<T>(any: T[]) {
-  for (const a of any) {
-    yield a
-  }
+export type AnimationState = 'stop' | 'play' | 'pause'
+export type AnimatorAction = {
+  play: () => void
+  stop: () => void
+  use: (animation: Animation) => void
 }
 
-type Gen = Generator<Frame, void, unknown>
-type GenT = Generator<Transition, void, unknown>
-
-interface DotAnimatorOption {
-  onUpdateFrame?: (frame: Frame) => void
+export type Animator = {
+  action: AnimatorAction
+  state: AnimationState
+  loop: boolean
+  onUpdateDotFrame: (f: (c: Frame) => void) => void
+  transform: Animated.ValueXY
 }
 
-export class DotAnimator {
-  isStop: boolean
-  private timer: number
-  private frames: Gen
-  private transitions?: GenT
-  private animation: Animation
-  transitionValue: Animated.ValueXY
-  constructor(private readonly option: DotAnimatorOption) {
-    this.transitionValue = new Animated.ValueXY()
+export const useDotAnimator = (option: DotAnimatorOption = {}): Animator => {
+  const dotAnimatorRef = useRef(new DotAnimator(option)).current
+  const transformAnimator = useRef(new TransformAnimator()).current
+
+  const [playState, setPlayState] = useState<AnimationState>('stop')
+  const [loop, setLoop] = useState(false)
+
+  const play = () => {
+    setPlayState('play')
+    dotAnimatorRef.play()
+    transformAnimator.play()
   }
 
-  private exec(gen: Gen) {
-    const g = gen.next()
-    if (g.value) {
-      this.option.onUpdateFrame?.(g.value)
-      return g
-    }
-
-    return g
+  const stop = () => {
+    setPlayState('stop')
+    dotAnimatorRef.stop()
+    transformAnimator.stop()
   }
 
-  private updateFrame(gen: Gen) {
-    const { value } = this.exec(gen)
-    if (!value) {
-      if (this.animation.loop) {
-        this.init()
-        this.run()
+  const use = (animation: Animation) => {
+    setLoop(animation.loop)
+    dotAnimatorRef.use(animation)
+    transformAnimator.use(animation.transition || [])
+  }
+
+  const onUpdateDotFrame = (f: (c: Frame) => void) => {
+    dotAnimatorRef.onUpdate(f)
+  }
+
+  useEffect(() => {
+    dotAnimatorRef.onEnd(() => {
+      setPlayState('stop')
+      if (loop) {
+        play()
       }
-      return
-    }
-
-    this.timer = window.setTimeout(() => {
-      this.updateFrame(gen)
-    }, value.duration)
-  }
-
-  private init() {
-    this.frames = createIterater(this.animation.frames)
-    this.transitions = this.animation.transition
-      ? createIterater(this.animation.transition)
-      : undefined
-
-    Animated.timing(this.transitionValue, {
-      toValue: { x: 0, y: 0 },
-      duration: 0,
-      useNativeDriver: false,
-    }).start()
-  }
-
-  private run() {
-    this.isStop = false
-    this.updateFrame(this.frames)
-  }
-
-  next() {
-    this.pause()
-    const { done } = this.exec(this.frames)
-    if (done) {
-      this.init()
-      this.next()
-    }
-  }
-
-  pause() {
-    if (this.isStop) return
-    this.isStop = true
-    window.clearTimeout(this.timer)
-  }
-
-  resume() {
-    if (!this.isStop) return
-    this.isStop = false
-    this.updateFrame(this.frames)
-  }
-
-  use(animation: Animation) {
-    this.animation = animation
-    this.init()
-    return this
-  }
-
-  start() {
-    this.init()
-    this.stop()
-    this.isStop = false
-    this.updateFrame(this.frames)
-    this.runTransform()
-  }
-
-  private runTransform() {
-    if (this.transitions) {
-      this.updateTransform(this.transitions)
-    }
-  }
-
-  private updateTransform(gen: GenT) {
-    const { value } = gen.next()
-    if (!value) return
-
-    Animated.timing(this.transitionValue, {
-      toValue: value.value,
-      duration: value.duration,
-      easing: value.easing,
-      delay: value.delay || 0,
-      useNativeDriver: false,
-    }).start(() => {
-      this.updateTransform(gen)
     })
-  }
+    return () => {
+      dotAnimatorRef.offOnEnd()
+    }
+  }, [loop])
 
-  stop() {
-    this.init()
-    this.pause()
+  return {
+    loop,
+    action: {
+      play,
+      stop,
+      use,
+    },
+    state: playState,
+    onUpdateDotFrame,
+    transform: transformAnimator.value,
   }
-
-  onUpdateFrame(onUpdate: (frame: Frame) => void) {
-    this.option.onUpdateFrame = onUpdate
-  }
-}
-
-export const useDotAnimator = (option: DotAnimatorOption = {}) => {
-  return useRef(new DotAnimator(option)).current
 }

@@ -1,11 +1,11 @@
 import React, { FC, useEffect, useState } from 'react'
 import { Animated } from 'react-native'
 import { DotDrawer } from './DotDrawer'
-import { DotAnimator } from './stateAnimate'
 import { Animation, Frame } from './animations'
+import { Animator } from './stateAnimate'
 
 interface DotAnimationCanvasProps {
-  animator: DotAnimator
+  animator: Animator
   initialAnimation: Animation
   src: string
   size: number
@@ -24,15 +24,15 @@ export const DotAnimationCanvas: FC<DotAnimationCanvasProps> = ({
   const reverse = frame.reverse
 
   useEffect(() => {
-    animator.onUpdateFrame(setFrame)
+    animator.onUpdateDotFrame(setFrame)
   }, [])
 
   return (
     <Animated.View
       style={{
         transform: [
-          { translateX: animator.transitionValue.x },
-          { translateY: animator.transitionValue.y },
+          { translateX: animator.transform.x },
+          { translateY: animator.transform.y },
         ],
       }}
     >
