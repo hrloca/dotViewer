@@ -10,7 +10,7 @@ export class AnimatorTimeKeeper {
   private onUpdateEmitter: Eventmitter<number>
   private onEndEmitter: Eventmitter<undefined>
   private _isPlaying = true
-  private _elapsedTime = 0
+  private _prevTime = 0
   private _currentTime = 0
   private _speed = 1
   private readonly engine: FrameEngine
@@ -18,7 +18,6 @@ export class AnimatorTimeKeeper {
     private readonly total: number,
     { onEnd, onUpdate }: AnimatorTimeKeeperOption
   ) {
-    // TODO: should inject.
     this.engine = new FrameEngine()
     this.engine.onUpdate(this.update.bind(this))
 
@@ -30,9 +29,9 @@ export class AnimatorTimeKeeper {
 
   private update() {
     const now = Date.now()
-    const diffTime = now - this._elapsedTime
+    const diffTime = now - this._prevTime
+    this._prevTime = now
 
-    this._elapsedTime = now
     this._currentTime += diffTime * this._speed
 
     if (this.total <= this._currentTime) {
@@ -63,7 +62,7 @@ export class AnimatorTimeKeeper {
   }
 
   play() {
-    this._elapsedTime = Date.now()
+    this._prevTime = Date.now()
     this._isPlaying = true
     this.engine.start()
   }
