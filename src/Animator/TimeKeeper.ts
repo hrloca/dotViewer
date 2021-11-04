@@ -1,23 +1,21 @@
 import { FrameEngine } from './FrameEngine'
 import { Eventmitter, eventmit } from '../ee'
 
-type AnimatorTimeKeeperOption = {
+type TimeKeeperOption = {
   onUpdate?: (currentFrame: number) => void
   onEnd?: () => void
 }
 
-export class AnimatorTimeKeeper {
+export class TimeKeeper {
   private onUpdateEmitter: Eventmitter<number>
   private onEndEmitter: Eventmitter<undefined>
-  private _isPlaying = true
+  private _isActive = true
   private _prevTime = 0
   private _currentTime = 0
   private _speed = 1
+  // TODO: should inject.
   private readonly engine: FrameEngine
-  constructor(
-    private readonly total: number,
-    { onEnd, onUpdate }: AnimatorTimeKeeperOption
-  ) {
+  constructor(private readonly total: number, { onEnd, onUpdate }: TimeKeeperOption) {
     this.engine = new FrameEngine()
     this.engine.onUpdate(this.update.bind(this))
 
@@ -48,8 +46,8 @@ export class AnimatorTimeKeeper {
     this.onUpdateEmitter.emit(time)
   }
 
-  get isPlaying() {
-    return this._isPlaying
+  get isActive() {
+    return this._isActive
   }
 
   set speed(value: number) {
@@ -61,14 +59,14 @@ export class AnimatorTimeKeeper {
     this.draw(time)
   }
 
-  play() {
+  start() {
     this._prevTime = Date.now()
-    this._isPlaying = true
+    this._isActive = true
     this.engine.start()
   }
 
   stop() {
-    this._isPlaying = false
+    this._isActive = false
     this.engine.stop()
   }
 }

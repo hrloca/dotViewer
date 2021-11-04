@@ -8,7 +8,7 @@ import { initializeState } from './initializeState'
 import './manifest.json'
 
 import { Slider } from './Slider'
-import { AnimatorTimeKeeper, AnimatorFrame } from './Animator'
+import { Animator } from './Animator'
 import Stop from '@material-ui/icons/StopCircle'
 import Play from '@material-ui/icons/PlayCircle'
 import Movie from '@material-ui/icons/Movie'
@@ -35,51 +35,72 @@ injectGlobal`
 `
 const AnimatorComponent = () => {
   const [f, setF] = useState(0)
-
-  const frame = new AnimatorFrame({
-    fps: 1,
-    total: 10,
-  })
-
-  const totalTime = frame.totalTime
-
+  const [v, setv] = useState<number | undefined>(0)
   const anim = useRef(
-    new AnimatorTimeKeeper(totalTime, {
-      onUpdate: (time) => {
-        setF(time)
+    new Animator(
+      {
+        fps: 24,
+        layer: [
+          {
+            type: 'tween',
+            from: {
+              target: 1,
+              value: 0,
+            },
+            to: {
+              target: 5,
+              value: 100,
+            },
+          },
+          {
+            type: 'tween',
+            from: {
+              target: 10,
+              value: 100,
+            },
+            to: {
+              target: 20,
+              value: 0,
+            },
+          },
+        ],
       },
-      onEnd: () => {
-        anim.seek(0)
-      },
-    })
+      {
+        onUpdate: ({ msec, value }) => {
+          console.log(value)
+          setv(value)
+          setF(msec)
+        },
+      }
+    )
   ).current
 
   return (
     <Container>
-      <div>{`${Math.floor(f * 100) / 100}`}</div>
-      <div>{frame.totalTime}</div>
+      {anim.totalTime}
       <IconButton onClick={() => anim.play()}>
         <Play />
       </IconButton>
       <IconButton onClick={() => anim.stop()}>
         <Stop />
       </IconButton>
-      <IconButton onClick={() => (anim.speed = 1)}>
-        <Movie />
-      </IconButton>
-      <IconButton onClick={() => (anim.speed = 2)}>
-        <Movie />
-      </IconButton>
-      <IconButton onClick={() => (anim.speed = 4)}>
-        <Movie />
-      </IconButton>
       <IconButton onClick={() => anim.seek(0)}>
         <Movie />
       </IconButton>
+      {v ? (
+        <div
+          style={{
+            transform: `translateY(${v}px)`,
+            width: 200,
+            height: 200,
+            background: '#faa',
+          }}
+        />
+      ) : null}
       <Slider
         onChange={(_, v) => {
           if (typeof v === 'number') {
-            if (anim.isPlaying) anim.stop()
+            anim.stop()
             anim.seek(v)
           }
         }}
@@ -87,7 +108,7 @@ const AnimatorComponent = () => {
         step={1}
         value={f}
         min={0}
-        max={totalTime}
+        max={anim.totalTime}
       />
     </Container>
   )
