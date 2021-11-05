@@ -26,10 +26,6 @@ export class AnimatorFrame {
     return this.timeFrom(this._total)
   }
 
-  get fps() {
-    return this._fps
-  }
-
   get total() {
     return this._total
   }

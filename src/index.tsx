@@ -8,7 +8,7 @@ import { initializeState } from './initializeState'
 import './manifest.json'
 
 import { Slider } from './Slider'
-import { Animator } from './Animator'
+import { AnimatorFactry, Animation } from './Animator'
 import Stop from '@material-ui/icons/StopCircle'
 import Play from '@material-ui/icons/PlayCircle'
 import Movie from '@material-ui/icons/Movie'
@@ -33,46 +33,73 @@ injectGlobal`
     background-color: #fafafa;
   }
 `
-const AnimatorComponent = () => {
-  const [f, setF] = useState(0)
-  const [v, setv] = useState<number | undefined>(0)
-  const anim = useRef(
-    new Animator(
+
+const animation: Animation = {
+  name: 'test',
+  fps: 24,
+  layers: [
+    [
       {
-        fps: 24,
-        layer: [
-          {
-            type: 'tween',
-            from: {
-              target: 1,
-              value: 0,
-            },
-            to: {
-              target: 5,
-              value: 100,
-            },
-          },
-          {
-            type: 'tween',
-            from: {
-              target: 10,
-              value: 100,
-            },
-            to: {
-              target: 20,
-              value: 0,
-            },
-          },
-        ],
+        type: 'tween',
+        startPoint: 1,
+        endPoint: 5,
+        from: 0,
+        to: 100,
       },
       {
-        onUpdate: ({ msec, value }) => {
-          console.log(value)
-          setv(value)
-          setF(msec)
-        },
-      }
-    )
+        type: 'tween',
+        startPoint: 5,
+        endPoint: 10,
+        from: 100,
+        to: 0,
+      },
+      {
+        type: 'tween',
+        startPoint: 10,
+        endPoint: 20,
+        from: 0,
+        to: 300,
+      },
+    ],
+    [
+      {
+        type: 'tween',
+        startPoint: 1,
+        endPoint: 5,
+        from: 0,
+        to: 10,
+      },
+      {
+        type: 'tween',
+        startPoint: 5,
+        endPoint: 10,
+        from: 10,
+        to: 90,
+      },
+      {
+        type: 'tween',
+        startPoint: 10,
+        endPoint: 20,
+        from: 90,
+        to: 300,
+      },
+    ],
+  ],
+}
+
+const AnimatorComponent = () => {
+  const [f, setF] = useState(0)
+  const [x, setx] = useState<number | undefined>(0)
+  const [y, sety] = useState<number | undefined>(0)
+  const anim = useRef(
+    new AnimatorFactry().create(animation, {
+      onUpdate: ({ msec, values }) => {
+        const [vx, vy] = values
+        setx(vx)
+        sety(vy)
+        setF(msec)
+      },
+    })
   ).current
 
   return (
@@ -87,16 +114,14 @@ const AnimatorComponent = () => {
       <IconButton onClick={() => anim.seek(0)}>
         <Movie />
       </IconButton>
-      {v ? (
-        <div
-          style={{
-            transform: `translateY(${v}px)`,
-            width: 200,
-            height: 200,
-            background: '#faa',
-          }}
-        />
-      ) : null}
+      <div
+        style={{
+          transform: `translateX(${x}px) translateY(${y}px)`,
+          width: 200,
+          height: 200,
+          background: '#faa',
+        }}
+      />
       <Slider
         onChange={(_, v) => {
           if (typeof v === 'number') {

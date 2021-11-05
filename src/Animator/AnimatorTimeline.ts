@@ -6,7 +6,7 @@ type TimeKeeperOption = {
   onEnd?: () => void
 }
 
-export class TimeKeeper {
+export class AnimatorTimeline {
   private onUpdateEmitter: Eventmitter<number>
   private onEndEmitter: Eventmitter<undefined>
   private _isActive = true
@@ -15,7 +15,10 @@ export class TimeKeeper {
   private _speed = 1
   // TODO: should inject.
   private readonly engine: FrameEngine
-  constructor(private readonly total: number, { onEnd, onUpdate }: TimeKeeperOption) {
+  constructor(
+    private readonly total: number,
+    { onEnd, onUpdate }: TimeKeeperOption = {}
+  ) {
     this.engine = new FrameEngine()
     this.engine.onUpdate(this.update.bind(this))
 
@@ -24,6 +27,9 @@ export class TimeKeeper {
     if (onUpdate) this.onUpdateEmitter.on(onUpdate)
     if (onEnd) this.onEndEmitter.on(onEnd)
   }
+
+  onUpdate = (handler: (num: number) => void) => this.onUpdateEmitter.on(handler)
+  onEnd = (handler: () => void) => this.onEndEmitter.on(handler)
 
   private update() {
     const now = Date.now()

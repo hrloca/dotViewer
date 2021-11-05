@@ -1,44 +1,31 @@
-export type Frame = {
-  value: number
-  target: number
+export type Span = {
+  startPoint: number
+  endPoint: number
+  label?: string
 }
 
-export type StaticSpan = {
+export type StaticSpan = Span & {
   type: 'static'
-  startFrame: number
-  endFrame: number
-  from: number
+  value: number
 }
 
-export type TweenSpan = {
+export type TweenSpan = Span & {
   type: 'tween'
-  startFrame: number
-  endFrame: number
   from: number
   to: number
 }
 
-export type Keyframe = StaticSpan | TweenSpan
-
-export type OldKeyframe = {
-  type: 'static' | 'tween'
-  start?: number
-  end?: number
-  from: Frame
-  to: Frame
-}
-
-export type Label = {
+export type LabelSpan = Span & {
+  type: 'label'
   label: string
-  from: number
-  to: number
 }
 
-export type Tween = unknown
+export type Keyframe = StaticSpan | TweenSpan | LabelSpan
 
-export type Layer = OldKeyframe
+export type Layer = Keyframe[]
 
 export type Animation = {
+  name: string
   fps: number
-  layer: Layer[]
+  layers: Layer[]
 }
