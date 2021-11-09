@@ -1,9 +1,9 @@
 import { Animation } from './types'
 import { AnimationMeta } from './AnimationMeta'
-import { AnimationFrameReader } from './AnimationFrameReader'
+import { AnimationFrameReader } from './AnimationReader'
 import { AnimatorTimeline } from './AnimatorTimeline'
 import { AnimatorFrame } from './AnimatorFrame'
-import { Animator, AnimatorOption } from './Animator'
+import { AnimatorPlayer, AnimatorOption } from './AnimatorPlayer'
 
 export class AnimatorFactry {
   create(animation: Animation, option: AnimatorOption) {
@@ -11,6 +11,6 @@ export class AnimatorFactry {
     const reader = new AnimationFrameReader(animation)
     const timeline = new AnimatorTimeline(meta.totalTime)
     const frame = new AnimatorFrame({ fps: meta.fps, total: meta.frames })
-    return new Animator(timeline, frame, meta, reader, option)
+    return new AnimatorPlayer(timeline, frame, meta, reader, option)
   }
 }

@@ -39,16 +39,16 @@ export class AnimatorTimeline {
     this._currentTime += diffTime * this._speed
 
     if (this.total <= this._currentTime) {
-      this.draw(this.total)
+      this.emit(this.total)
       this.stop()
       this.onEndEmitter.emit(undefined)
       return
     }
 
-    this.draw(this._currentTime)
+    this.emit(this._currentTime)
   }
 
-  private draw(time: number) {
+  private emit(time: number) {
     this.onUpdateEmitter.emit(time)
   }
 
@@ -62,7 +62,7 @@ export class AnimatorTimeline {
 
   seek(time: number) {
     this._currentTime = time
-    this.draw(time)
+    this.emit(time)
   }
 
   start() {

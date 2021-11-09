@@ -1,3 +1,5 @@
+import { Easing } from './Tween/bezier'
+
 export type Span = {
   startPoint: number
   endPoint: number
@@ -13,6 +15,8 @@ export type TweenSpan = Span & {
   type: 'tween'
   from: number
   to: number
+  bezier?: [number, number, number, number]
+  ease?: Easing
 }
 
 export type LabelSpan = Span & {
@@ -22,10 +26,15 @@ export type LabelSpan = Span & {
 
 export type Keyframe = StaticSpan | TweenSpan | LabelSpan
 
-export type Layer = Keyframe[]
+export type Layer = {
+  name: string
+  keyframes: Keyframe[]
+}
 
 export type Animation = {
   name: string
   fps: number
+  // TODO: to automation
+  total: number
   layers: Layer[]
 }

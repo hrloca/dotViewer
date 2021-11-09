@@ -21,8 +21,10 @@ import AddIcon from '@material-ui/icons/Add'
 
 import { useSelectorState } from './stateSelector'
 import { useManegeDots } from './stateDots'
-
-import { DotDrawer, DotSelector, DotList } from './components'
+import { DotDrawer } from './DotDrawer'
+import { DotSelector } from './DotSelector'
+import { DotList } from './DotList'
+import { DotViewer } from './DotViewer'
 
 export const Contents = () => {
   const theme = useTheme()
@@ -90,8 +92,18 @@ export const Contents = () => {
       {!matches ? (
         <>
           <Carousel length={length} index={index} onNext={next} onPrev={prev}>
-            <CarouselItem>{imagePath}</CarouselItem>
-            <CarouselItem>{list}</CarouselItem>
+            <CarouselItem
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                height: 'calc(100vh - 112px)',
+              }}
+            >
+              <DotViewer src={imagePath} />
+            </CarouselItem>
+            <CarouselItem style={{ overflowY: 'scroll', height: 'calc(100vh - 112px)' }}>
+              {list}
+            </CarouselItem>
           </Carousel>
 
           <Paper sx={{ position: 'fixed', bottom: 0, left: 0, right: 0 }} elevation={3}>
@@ -111,7 +123,9 @@ export const Contents = () => {
         </>
       ) : (
         <Grid container spacing={2} style={{ height: '100%', flexShrink: 0 }}>
-          <Grid container direction="column" item xs={8}></Grid>
+          <Grid container direction="column" item xs={8}>
+            <DotViewer src={imagePath} />
+          </Grid>
           <Grid style={{ height: '100%', flexShrink: 0 }} item xs={4}>
             <Box style={{ overflowY: 'scroll', height: '100%', flexShrink: 0 }}>
               {list}

@@ -2,14 +2,14 @@ import { TweenRate, TweenValue } from './Tween'
 import { bezier } from './Tween/bezier'
 import { Animation, Layer } from './types'
 
-export class AnimationReader {
+export class AnimationFrameReader {
   constructor(private readonly animation: Animation) {}
 
-  cutout(frame: number) {
-    return this.animation.layers.map((layer) => this.cutoutLayer(frame, layer))
+  read(frame: number) {
+    return this.animation.layers.map((layer) => this.readLayer(frame, layer))
   }
 
-  private cutoutLayer(frame: number, layer: Layer) {
+  private readLayer(frame: number, layer: Layer) {
     const ly = layer.keyframes.find((l) => frame >= l.startPoint && frame <= l.endPoint)
     if (!ly) return
 

@@ -19,7 +19,7 @@ export class AnimationMeta {
   }
 
   get frames() {
-    return 20
+    return this.animation.total
   }
 
   get totalTime() {

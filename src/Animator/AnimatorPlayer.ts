@@ -1,7 +1,7 @@
 import { AnimatorTimeline } from './AnimatorTimeline'
 import { AnimatorFrame } from './AnimatorFrame'
 import { AnimationMeta } from './AnimationMeta'
-import { AnimationFrameReader } from './AnimationFrameReader'
+import { AnimationFrameReader } from './AnimationReader'
 import { Eventmitter, eventmit } from '../ee'
 
 export type AnimatorOption = {
@@ -14,7 +14,7 @@ type AnimatorUpdate = {
   values: (number | undefined)[]
 }
 
-export class Animator {
+export class AnimatorPlayer {
   private onUpdateEmitter: Eventmitter<AnimatorUpdate>
   constructor(
     private readonly timeline: AnimatorTimeline,
