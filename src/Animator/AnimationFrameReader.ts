@@ -10,11 +10,11 @@ export class AnimationReader {
   }
 
   private cutoutLayer(frame: number, layer: Layer) {
-    const ly = layer.keyframes.find((l) => frame >= l.startPoint && frame <= l.endPoint)
+    const ly = layer.keyframes.find((l) => frame >= l.startFrame && frame <= l.endFrame)
     if (!ly) return
 
-    const start = ly.startPoint
-    const end = ly.endPoint
+    const start = ly.startFrame
+    const end = ly.endFrame
 
     switch (ly.type) {
       case 'tween': {

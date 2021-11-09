@@ -1,8 +1,8 @@
 import { Easing } from './Tween/bezier'
 
 export type Span = {
-  startPoint: number
-  endPoint: number
+  startFrame: number
+  endFrame: number
   label?: string
 }
 

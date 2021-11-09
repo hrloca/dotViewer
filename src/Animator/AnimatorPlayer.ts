@@ -6,6 +6,7 @@ import { Eventmitter, eventmit } from '../ee'
 
 export type AnimatorOption = {
   onUpdate?: (arg: AnimatorUpdate) => void
+  onEnd?: () => void
 }
 
 type AnimatorUpdate = {
@@ -39,6 +40,10 @@ export class AnimatorPlayer {
     })
   }
 
+  get isPlaying() {
+    return this.timeline.isActive
+  }
+
   get totalTime() {
     return this.meta.totalTime
   }
@@ -46,7 +51,16 @@ export class AnimatorPlayer {
     return this.meta.frames
   }
 
-  play() {
+  play(repeat: boolean) {
+    if (repeat) {
+      const onend = () => {
+        this.timeline.seek(0)
+        this.timeline.start()
+      }
+      this.timeline.start()
+      this.timeline.onEnd(onend)
+      return
+    }
     this.timeline.start()
   }
 

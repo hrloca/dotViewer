@@ -7,7 +7,7 @@ import { ThemeProvider, createTheme } from '@material-ui/core/styles'
 import { initializeState } from './initializeState'
 import './manifest.json'
 
-import { Contents } from './Contents'
+import { Contents } from './components/Contents'
 
 const theme = createTheme({
   palette: {
