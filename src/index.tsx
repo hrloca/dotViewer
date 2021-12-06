@@ -4,7 +4,7 @@ import { RecoilRoot } from 'recoil'
 import { injectGlobal } from '@emotion/css'
 import { reset } from './css'
 import { ThemeProvider, createTheme } from '@material-ui/core/styles'
-import { initializeState } from './initializeState'
+import { initializeState } from './state'
 import './manifest.json'
 
 import { Contents } from './components/Contents'

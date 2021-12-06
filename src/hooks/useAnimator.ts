@@ -1,12 +1,22 @@
 import { useEffect, useState } from 'react'
-import { AnimatorFactry, Animation, AnimatorOption, AnimatorPlayer } from '../Animator'
+import {
+  AnimatorFactry,
+  AnimationSource,
+  AnimatorPlayer,
+  AnimationMeta,
+} from '../Animator'
 
-export const useAnimator = (animation: Animation, option: AnimatorOption) => {
-  const [player, set] = useState<AnimatorPlayer | null>(null)
+export const useAnimator = (
+  animation: AnimationSource
+): [AnimatorPlayer | null, AnimationMeta | null] => {
+  const [player, setPlayer] = useState<AnimatorPlayer | null>(null)
+  const [meta, setMeta] = useState<AnimationMeta | null>(null)
   useEffect(() => {
-    const player = new AnimatorFactry().create(animation, option)
-    set(player)
-  }, [])
+    player?.stop()
+    const [newPlayer, meta] = new AnimatorFactry().create(animation)
+    setPlayer(newPlayer)
+    setMeta(meta)
+  }, [animation])
 
-  return player
+  return [player, meta]
 }

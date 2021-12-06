@@ -7,7 +7,7 @@ import DialogContent from '@material-ui/core/DialogContent'
 import DialogContentText from '@material-ui/core/DialogContentText'
 import DialogTitle from '@material-ui/core/DialogTitle'
 import { SheetSelector } from './SheetSelector'
-import { useSelectorState, Phase } from './../stateSelector'
+import { useSelectorState, Phase } from './../state'
 import { DotDrawer } from './DotDrawer'
 
 export type DotSelectorProps = {

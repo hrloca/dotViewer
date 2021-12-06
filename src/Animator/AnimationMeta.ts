@@ -1,12 +1,11 @@
-import { Animation } from './types'
-import { AnimatorFrame } from './AnimatorFrame'
+import { AnimationSource } from './types'
+import { AnimationFrame } from './AnimationFrame'
 
 export class AnimationMeta {
-  private readonly frame: AnimatorFrame
-  constructor(private readonly animation: Animation) {
-    this.frame = new AnimatorFrame({
+  private readonly frame: AnimationFrame
+  constructor(private readonly animation: AnimationSource) {
+    this.frame = new AnimationFrame({
       fps: this.fps,
-      total: this.frames,
     })
   }
 
@@ -19,7 +18,7 @@ export class AnimationMeta {
   }
 
   get frames() {
-    return this.animation.total
+    return this.animation.frames
   }
 
   get totalTime() {

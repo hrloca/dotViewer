@@ -1,7 +1,7 @@
 import React, { FC, useState } from 'react'
 import { useRecoilState } from 'recoil'
 import { DotDrawer } from './DotDrawer'
-import { dots } from './../stateDots'
+import { dots } from './../state'
 
 import Divider from '@material-ui/core/Divider'
 import List from '@material-ui/core/List'

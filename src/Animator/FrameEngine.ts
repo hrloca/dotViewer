@@ -1,12 +1,12 @@
-import { Eventmitter, eventmit } from '../ee'
+import { Eventmitter, eventmit } from '../libs'
 
 type FrameEngineOption = {
   onUpdate?: () => void
 }
 
 export class FrameEngine {
-  private _timer: number
-  private _active: boolean
+  private _timer = 0
+  private _active = false
   private onUpdateEmitter: Eventmitter<undefined>
 
   constructor(option: FrameEngineOption = {}) {

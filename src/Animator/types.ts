@@ -31,10 +31,10 @@ export type Layer = {
   keyframes: Keyframe[]
 }
 
-export type Animation = {
+export type AnimationSource = {
   name: string
   fps: number
   // TODO: to automation
-  total: number
+  frames: number
   layers: Layer[]
 }

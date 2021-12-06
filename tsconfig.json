@@ -1,20 +1,16 @@
 {
-  "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.json"],
+  "include": ["src/**/*", "src/**/*.json"],
   "compilerOptions": {
     "target": "ES5",
-    "lib": ["esnext", "esnext.asynciterable", "DOM"],
+    "lib": ["esnext", "DOM"],
     "module": "commonjs",
     "composite": true,
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "types": ["jest", "node", "react", "react-native"],
     "typeRoots": ["node_modules/@types", "types"],
     "moduleResolution": "node",
-    "experimentalDecorators": true,
-    "emitDecoratorMetadata": true,
-    "strictPropertyInitialization": false,
     "resolveJsonModule": true,
     "jsx": "react"
   }

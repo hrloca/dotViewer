@@ -1,9 +1,9 @@
-import { Animation } from '../Animator'
+import { AnimationSource } from '../../Animator'
 
-export const warkFront: Animation = {
+export const warkFront: AnimationSource = {
   name: '歩き(前)',
   fps: 24,
-  total: 20,
+  frames: 20,
   layers: [
     {
       name: 'dot',
@@ -37,10 +37,10 @@ export const warkFront: Animation = {
   ],
 }
 
-export const warkBack: Animation = {
+export const warkBack: AnimationSource = {
   name: '歩き(後)',
   fps: 24,
-  total: 20,
+  frames: 20,
   layers: [
     {
       name: 'dot',
@@ -74,10 +74,10 @@ export const warkBack: Animation = {
   ],
 }
 
-export const warkLeft: Animation = {
+export const warkLeft: AnimationSource = {
   name: '歩き(左)',
   fps: 24,
-  total: 20,
+  frames: 20,
   layers: [
     {
       name: 'dot',
@@ -111,10 +111,10 @@ export const warkLeft: Animation = {
   ],
 }
 
-export const warkRight: Animation = {
+export const warkRight: AnimationSource = {
   name: '歩き(右)',
   fps: 24,
-  total: 20,
+  frames: 20,
   layers: [
     {
       name: 'dot',

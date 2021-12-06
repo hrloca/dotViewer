@@ -19,9 +19,7 @@ import FormatListBulletedIcon from '@material-ui/icons/FormatListBulleted'
 import LocalMoviesIcon from '@material-ui/icons/LocalMovies'
 import AddIcon from '@material-ui/icons/Add'
 
-import { useSelectorState } from '../stateSelector'
-import { useManegeDots } from '../stateDots'
-
+import { useManegeDots, useSelectorState } from '../state'
 import { DotAnimator, DotDrawer, DotSelector, DotList } from './'
 
 export const Contents = () => {
@@ -113,7 +111,7 @@ export const Contents = () => {
         <Grid container spacing={2} style={{ height: '100%', flexShrink: 0 }}>
           <Grid container direction="column" item xs={8}>
             <Box>
-              <DotAnimator src={imagePath} />
+              <DotAnimator size={128} src={imagePath} />
             </Box>
           </Grid>
           <Grid style={{ height: '100%', flexShrink: 0 }} item xs={4}>

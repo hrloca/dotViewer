@@ -1,16 +1,29 @@
-import { Animation } from './types'
+import { AnimationSource } from './types'
 import { AnimationMeta } from './AnimationMeta'
-import { AnimationFrameReader } from './AnimationReader'
-import { AnimatorTimeline } from './AnimatorTimeline'
-import { AnimatorFrame } from './AnimatorFrame'
-import { AnimatorPlayer, AnimatorOption } from './AnimatorPlayer'
+import { AnimationReader } from './AnimationReader'
+import { Timekeeper } from './Timekeeper'
+import { AnimationFrame } from './AnimationFrame'
+import { AnimatorPlayer } from './AnimatorPlayer'
+import { AnimationBody } from './Animation'
+
+export class AnimationFactory {
+  create(src: AnimationSource): [AnimationMeta, AnimationBody] {
+    const meta = new AnimationMeta(src)
+    const reader = new AnimationReader(src)
+    const frame = new AnimationFrame({ fps: meta.fps })
+    const body = new AnimationBody(frame, reader)
+
+    return [meta, body]
+  }
+}
 
 export class AnimatorFactry {
-  create(animation: Animation, option: AnimatorOption) {
-    const meta = new AnimationMeta(animation)
-    const reader = new AnimationFrameReader(animation)
-    const timeline = new AnimatorTimeline(meta.totalTime)
-    const frame = new AnimatorFrame({ fps: meta.fps, total: meta.frames })
-    return new AnimatorPlayer(timeline, frame, meta, reader, option)
+  create(animation: AnimationSource): [AnimatorPlayer, AnimationMeta] {
+    const [meta, body] = new AnimationFactory().create(animation)
+
+    const timekeeper = new Timekeeper()
+    timekeeper.total = meta.totalTime
+
+    return [new AnimatorPlayer(timekeeper, body), meta]
   }
 }

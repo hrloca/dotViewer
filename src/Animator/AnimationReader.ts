@@ -1,9 +1,9 @@
 import { TweenRate, TweenValue } from './Tween'
 import { bezier } from './Tween/bezier'
-import { Animation, Layer } from './types'
+import { AnimationSource, Layer } from './types'
 
-export class AnimationFrameReader {
-  constructor(private readonly animation: Animation) {}
+export class AnimationReader {
+  constructor(private readonly animation: AnimationSource) {}
 
   read(frame: number) {
     return this.animation.layers.map((layer) => this.readLayer(frame, layer))

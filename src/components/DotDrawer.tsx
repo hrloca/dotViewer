@@ -20,9 +20,17 @@ export interface DotDrawer {
   src: string
   reverse?: boolean
   size: number
+  className?: string
 }
 
-export const DotDrawer: FC<DotDrawer> = ({ reverse = false, x, y, src, size }) => {
+export const DotDrawer: FC<DotDrawer> = ({
+  reverse = false,
+  x,
+  y,
+  src,
+  size,
+  className,
+}) => {
   const ref = useRef<HTMLCanvasElement | null>(null)
   const [drawer, setDrawer] = useState<ReturnType<typeof draw> | null>(null)
 
@@ -46,8 +54,13 @@ export const DotDrawer: FC<DotDrawer> = ({ reverse = false, x, y, src, size }) =
   }, [drawer, x, y, size, reverse])
 
   return (
-    <div style={{ transform: reverse ? 'scale(-1, 1)' : undefined }}>
-      <canvas ref={ref} height={size} width={size} />
+    <div className={className}>
+      <canvas
+        style={{ transform: reverse ? 'scale(-1, 1)' : undefined }}
+        ref={ref}
+        height={size}
+        width={size}
+      />
     </div>
   )
 }

@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { atom, useRecoilState } from 'recoil'
-import { dotsrc } from './default'
+import { dotsrc } from '../dots'
 
 export type Dot = {
   src: string

@@ -1,74 +1,81 @@
-import { AnimatorTimeline } from './AnimatorTimeline'
-import { AnimatorFrame } from './AnimatorFrame'
-import { AnimationMeta } from './AnimationMeta'
-import { AnimationFrameReader } from './AnimationReader'
-import { Eventmitter, eventmit } from '../ee'
+import { Timekeeper } from './Timekeeper'
+import { Eventmitter, eventmit } from '../libs'
+import { AnimationSource } from './types'
+import { AnimationBody } from './Animation'
 
 export type AnimatorOption = {
   onUpdate?: (arg: AnimatorUpdate) => void
+  onChange?: (isPlaying: boolean) => void
+  onLoad?: () => void
   onEnd?: () => void
 }
 
 type AnimatorUpdate = {
   msec: number
-  frame: number
   values: (number | undefined)[]
 }
 
 export class AnimatorPlayer {
   private onUpdateEmitter: Eventmitter<AnimatorUpdate>
+  private onChangeEmitter: Eventmitter<boolean>
+  private onLoadEmitter: Eventmitter<undefined>
+  private handler: (msec: number) => void
+  // private _isEmpty = true
   constructor(
-    private readonly timeline: AnimatorTimeline,
-    private readonly frame: AnimatorFrame,
-    private readonly meta: AnimationMeta,
-    private readonly reader: AnimationFrameReader,
+    private readonly timekeeper: Timekeeper,
+    private readonly body: AnimationBody,
     option: AnimatorOption = {}
   ) {
     this.onUpdateEmitter = eventmit<AnimatorUpdate>()
+    this.onChangeEmitter = eventmit<boolean>()
+    this.onLoadEmitter = eventmit<undefined>()
     if (option.onUpdate) this.onUpdateEmitter.on(option.onUpdate)
-    this.timeline.onUpdate(this.update.bind(this))
+    if (option.onChange) this.onChangeEmitter.on(option.onChange)
+    if (option.onLoad) this.onLoadEmitter.on(option.onLoad)
+
+    this.handler = this.update.bind(this)
+    this.timekeeper.onUpdate(this.handler)
   }
 
   private update(msec: number) {
-    const frame = this.frame.from(msec)
-    const values = this.reader.read(frame)
+    const values = this.body.readFromTime(msec)
 
     this.onUpdateEmitter.emit({
       msec,
-      frame,
       values,
     })
   }
 
   get isPlaying() {
-    return this.timeline.isActive
+    return this.timekeeper.isActive
   }
 
-  get totalTime() {
-    return this.meta.totalTime
-  }
-  get totalFrame() {
-    return this.meta.frames
+  // TODO: think lifecycle
+  load(data: AnimationSource) {
+    this.stop()
+    this.timekeeper.offUpdate(this.handler)
+    this.onLoadEmitter.emit(undefined)
+    return data
   }
 
   play(repeat: boolean) {
-    if (repeat) {
-      const onend = () => {
-        this.timeline.seek(0)
-        this.timeline.start()
-      }
-      this.timeline.start()
-      this.timeline.onEnd(onend)
-      return
-    }
-    this.timeline.start()
+    this.timekeeper.loop = repeat
+    this.timekeeper.start()
+    this.onChangeEmitter.emit(this.isPlaying)
   }
 
   stop() {
-    this.timeline.stop()
+    this.timekeeper.stop()
+    this.onChangeEmitter.emit(this.isPlaying)
   }
 
   seek(msec: number) {
-    this.timeline.seek(msec)
+    this.timekeeper.seek(msec)
   }
+
+  readonly onUpdate = (handler: (arg: AnimatorUpdate) => void) =>
+    this.onUpdateEmitter.on(handler)
+  readonly onChange = (handler: (isPlaying: boolean) => void) =>
+    this.onChangeEmitter.on(handler)
+  readonly onLoad = (handler: () => void) => this.onLoadEmitter.on(handler)
 }
