@@ -24,4 +24,12 @@ export class AnimationMeta {
   get totalTime() {
     return this.frame.timeFrom(this.frames)
   }
+
+  get repeat() {
+    return this.animation.repeat
+  }
+
+  get pause() {
+    return this.animation.pause
+  }
 }

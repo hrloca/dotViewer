@@ -65,6 +65,10 @@ export class Timekeeper {
     this._speed = value
   }
 
+  get speed() {
+    return this._speed
+  }
+
   set loop(isLoop: boolean) {
     this._isLoop = isLoop
   }

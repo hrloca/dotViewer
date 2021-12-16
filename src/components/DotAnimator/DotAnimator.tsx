@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { styled } from '@material-ui/system'
 import { map, DotTarget } from '../../hooks/useDotSheet'
 import { useAnimator } from '../../hooks/useAnimator'
@@ -7,6 +7,7 @@ import { Slider } from '../Slider'
 
 import { animations } from '../../dots/animations'
 import { Controller } from './Controller'
+import { countup, countdown } from '../../libs'
 
 type DotAnimatorProps = {
   src: string
@@ -14,49 +15,64 @@ type DotAnimatorProps = {
 }
 
 export const DotAnimator: React.FC<DotAnimatorProps> = ({ src, size }) => {
-  const [target, setTarget] = useState<number | undefined>(1)
-  const [time, setTime] = useState<number | undefined>(1)
-  const [isPlaying, setIsPlaying] = useState<boolean>(false)
   const [anim, setAnim] = useState<number>(0)
+  const [target, setTarget] = useState<number | undefined>(1)
 
-  const [player, meta] = useAnimator(animations[anim])
+  const { action, state, meta } = useAnimator(animations[anim], {
+    onUpdate({ msec, values, meta }) {
+      const [dotTargetNumber] = values
+      action.seek(msec)
+      setTarget(dotTargetNumber)
+      if (msec === 0) {
+        setTarget(meta.pause)
+      }
+    },
+    onLoad({ pause }) {
+      action.seek(0)
+      setTarget(pause)
+    },
+  })
 
-  useEffect(() => {
-    player?.onChange((isplaying) => {
-      setIsPlaying(isplaying)
-    })
+  const next = () => {
+    setAnim(countup(animations.length - 1)(anim))
+  }
 
-    player?.onUpdate(({ msec, values }) => {
-      setTime(msec)
-      setTarget(values[0])
-    })
-  }, [player])
-
-  const reverse = typeof target === 'number' ? target < 0 : false
-  const [y, x] = typeof target === 'number' ? map[Math.abs(target) as DotTarget] : [0, 1]
-
-  if (!player || !meta) return null
-
-  const onNext = () => {
-    const ne = anim + 1
-    if (ne >= animations.length) {
-      setAnim(0)
-      return
+  const prev = () => {
+    if (state.time < 200) {
+      setAnim(countdown(animations.length - 1)(anim))
+    } else {
+      action.seek(0)
     }
-    setAnim(ne)
+  }
+
+  if (!meta || target === undefined) return null
+
+  const reverse = target < 0
+  const [y, x] = map[Math.abs(target) as DotTarget]
+  const step = meta.totalTime / meta.frames
+  const slow = () => {
+    if (state.speed === 1) {
+      action.speed(0.5)
+    } else if (state.speed === 0.5) {
+      action.speed(0.2)
+    } else {
+      action.speed(1)
+    }
   }
 
   return (
     <Wrapper>
       <Display
         onClick={() => {
-          if (isPlaying) {
-            player.stop()
+          if (state.isPlaying) {
+            action.stop()
           } else {
-            player.play(true)
+            action.play()
           }
         }}
       >
+        <div>{meta.name}</div>
+        <div>{Math.round(meta.totalTime) / 1000}s</div>
         <DotDrawerView reverse={reverse} x={x} y={y} src={src} size={size} />
       </Display>
 
@@ -65,23 +81,31 @@ export const DotAnimator: React.FC<DotAnimatorProps> = ({ src, size }) => {
           <Slider
             onChange={(_, v) => {
               if (typeof v === 'number') {
-                player.seek(v)
+                action.stop()
+                action.seek(v)
               }
             }}
+            onChangeCommitted={() => {
+              action.play()
+            }}
             defaultValue={0}
-            step={meta.totalTime / meta.frames}
-            value={time}
+            step={step}
+            value={state.time}
             min={0}
             max={meta.totalTime}
           />
         </SliderWrapper>
 
         <Controller
-          isPlaying={isPlaying}
-          onStop={() => player.stop()}
-          onPlay={() => player.play(true)}
-          onPrev={() => player.seek(0)}
-          onNext={onNext}
+          isPlaying={state.isPlaying}
+          isRepeat={state.isRepeat}
+          speed={state.speed}
+          onStop={() => action.stop()}
+          onPlay={() => action.play()}
+          onSlow={() => slow()}
+          onPrev={prev}
+          onNext={next}
+          onRepeat={() => action.repeat(!state.isRepeat)}
           onFullScreen={() => null}
         />
       </ControllerView>
@@ -96,7 +120,6 @@ const DotDrawerView = styled(DotDrawer)({
 const Display = styled('div')({
   position: 'relative',
   width: '100%',
-  display: 'flex',
   height: 300,
 })
 

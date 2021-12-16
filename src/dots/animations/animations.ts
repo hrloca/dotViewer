@@ -297,3 +297,4 @@ export const animations: Animation[] = [
       { coordinate: [4, 0], duration: 400 },
     ],
   },
+]

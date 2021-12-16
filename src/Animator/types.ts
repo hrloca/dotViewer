@@ -32,9 +32,16 @@ export type Layer = {
 }
 
 export type AnimationSource = {
+  id: string
   name: string
   fps: number
   // TODO: to automation
   frames: number
   layers: Layer[]
+  repeat: boolean
+  pause?: number
+  stage?: {
+    src?: string
+    bgcolor?: string
+  }
 }
