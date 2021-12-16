@@ -43,7 +43,7 @@ export const DotSelector: FC<DotSelectorProps> = ({ onSelect }) => {
         <DialogTitle>Dot Name.</DialogTitle>
         <DialogContent>
           <DialogContentText>ドット名を入力</DialogContentText>
-          <DotDrawer size={64} imgPath={state.src} reverse={false} y={0} x={4} />
+          <DotDrawer size={64} src={state.src} reverse={false} y={0} x={4} />
           <TextField
             autoFocus
             margin="dense"

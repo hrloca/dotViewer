@@ -48,11 +48,11 @@ export const Slider = styled(SliderUnstyled)(
     box-sizing: border-box;
     border-radius: 50%;
     outline: 0;
-    border: 2px solid currentColor;
-    background-color: #fff;
 
     :hover,
     &.Mui-focusVisible {
+      border: 2px solid currentColor;
+      background-color: #fff;
       box-shadow: 0 0 0 0.25rem ${alpha(
         theme.palette.mode === 'light' ? '#1976d2' : '#90caf9',
         0.15
@@ -60,6 +60,8 @@ export const Slider = styled(SliderUnstyled)(
     }
 
     &.Mui-active {
+      border: 2px solid currentColor;
+      background-color: #fff;
       box-shadow: 0 0 0 0.25rem ${alpha(
         theme.palette.mode === 'light' ? '#1976d2' : '#90caf9',
         0.3

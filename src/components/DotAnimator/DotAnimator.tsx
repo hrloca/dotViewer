@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { styled } from '@material-ui/system'
 import { map, DotTarget } from '../../hooks/useDotSheet'
 import { useAnimator } from '../../hooks/useAnimator'
@@ -7,6 +7,7 @@ import { Slider } from '../Slider'
 
 import { animations } from '../../dots/animations'
 import { Controller } from './Controller'
+import { AspectRatio } from '../AspectRatio'
 import { countup, countdown } from '../../libs'
 
 type DotAnimatorProps = {
@@ -17,6 +18,7 @@ type DotAnimatorProps = {
 export const DotAnimator: React.FC<DotAnimatorProps> = ({ src, size }) => {
   const [anim, setAnim] = useState<number>(0)
   const [target, setTarget] = useState<number | undefined>(1)
+  const [viewController, setViewController] = useState<boolean>(false)
 
   const { action, state, meta } = useAnimator(animations[anim], {
     onUpdate({ msec, values, meta }) {
@@ -32,6 +34,11 @@ export const DotAnimator: React.FC<DotAnimatorProps> = ({ src, size }) => {
       setTarget(pause)
     },
   })
+
+  useEffect(() => {
+    action.play()
+    action.seek(0)
+  }, [src])
 
   const next = () => {
     setAnim(countup(animations.length - 1)(anim))
@@ -61,66 +68,71 @@ export const DotAnimator: React.FC<DotAnimatorProps> = ({ src, size }) => {
   }
 
   return (
-    <Wrapper>
-      <Display
-        onClick={() => {
-          if (state.isPlaying) {
-            action.stop()
-          } else {
-            action.play()
-          }
-        }}
-      >
-        <div>{meta.name}</div>
-        <div>{Math.round(meta.totalTime) / 1000}s</div>
-        <DotDrawerView reverse={reverse} x={x} y={y} src={src} size={size} />
-      </Display>
-
-      <ControllerView>
-        <SliderWrapper>
-          <Slider
-            onChange={(_, v) => {
-              if (typeof v === 'number') {
-                action.stop()
-                action.seek(v)
-              }
-            }}
-            onChangeCommitted={() => {
+    <Wrapper
+      onMouseOver={() => setViewController(true)}
+      onMouseOut={() => setViewController(false)}
+    >
+      <AspectRatio ratio={[3, 2]}>
+        <TitleView show={viewController}>
+          <div>{meta.name}</div>
+        </TitleView>
+        <Display
+          onClick={() => {
+            if (state.isPlaying) {
+              action.stop()
+            } else {
               action.play()
-            }}
-            defaultValue={0}
-            step={step}
-            value={state.time}
-            min={0}
-            max={meta.totalTime}
-          />
-        </SliderWrapper>
+            }
+          }}
+        >
+          <DotDrawer reverse={reverse} x={x} y={y} src={src} size={size} />
+        </Display>
 
-        <Controller
-          isPlaying={state.isPlaying}
-          isRepeat={state.isRepeat}
-          speed={state.speed}
-          onStop={() => action.stop()}
-          onPlay={() => action.play()}
-          onSlow={() => slow()}
-          onPrev={prev}
-          onNext={next}
-          onRepeat={() => action.repeat(!state.isRepeat)}
-          onFullScreen={() => null}
-        />
-      </ControllerView>
+        <ControllerView show={viewController}>
+          <SliderWrapper>
+            <Slider
+              onChange={(_, v) => {
+                if (typeof v === 'number') {
+                  action.stop()
+                  action.seek(v)
+                }
+              }}
+              onChangeCommitted={() => {
+                action.play()
+              }}
+              defaultValue={0}
+              step={step}
+              value={state.time}
+              min={0}
+              max={meta.totalTime}
+            />
+          </SliderWrapper>
+
+          <Controller
+            isPlaying={state.isPlaying}
+            isRepeat={state.isRepeat}
+            speed={state.speed}
+            onStop={() => action.stop()}
+            onPlay={() => action.play()}
+            onSlow={() => slow()}
+            onPrev={prev}
+            onNext={next}
+            onRepeat={() => action.repeat(!state.isRepeat)}
+          />
+        </ControllerView>
+      </AspectRatio>
     </Wrapper>
   )
 }
 
-const DotDrawerView = styled(DotDrawer)({
-  width: '100%',
-})
-
 const Display = styled('div')({
   position: 'relative',
   width: '100%',
-  height: 300,
+  height: '100%',
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+  alignContent: 'center',
 })
 
 const Wrapper = styled('div')({
@@ -133,9 +145,27 @@ const SliderWrapper = styled('div')({
   paddingRight: 16,
 })
 
-const ControllerView = styled('div')({
-  position: 'absolute',
-  width: '100%',
-  height: 48,
-  bottom: 0,
+const ControllerView = styled('div')<{ show: boolean }>(({ show }) => {
+  return {
+    paddingTop: 8,
+    paddingBottom: 8,
+    position: 'absolute',
+    transition: 'all .3s ease',
+    opacity: show ? 1 : 0,
+    width: '100%',
+    bottom: 0,
+    backgroundColor: 'rgba(0,0,0,0.1)',
+  }
+})
+
+const TitleView = styled('div')<{ show: boolean }>(({ show }) => {
+  return {
+    padding: 8,
+    position: 'absolute',
+    transition: 'all .3s ease',
+    opacity: show ? 1 : 0,
+    width: '100%',
+    top: 0,
+    backgroundColor: 'rgba(0,0,0,0.1)',
+  }
 })

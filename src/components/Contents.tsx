@@ -88,7 +88,11 @@ export const Contents = () => {
       {!matches ? (
         <>
           <Carousel length={length} index={index} onNext={next} onPrev={prev}>
-            <CarouselItem></CarouselItem>
+            <CarouselItem>
+              <Box>
+                <DotAnimator size={128} src={imagePath} />
+              </Box>
+            </CarouselItem>
             <CarouselItem>{list}</CarouselItem>
           </Carousel>
 

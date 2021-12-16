@@ -29,6 +29,7 @@ export const useAnimator = (src: AnimationSource, option: UseAnimatorOption) => 
     newPlayer.speed = speed
     newPlayer.onEnd(() => {
       setIsPlaying(false)
+      action.seek(0)
     })
 
     setPlayer(newPlayer)
