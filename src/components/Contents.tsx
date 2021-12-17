@@ -1,10 +1,5 @@
-import React, { useState, useEffect } from 'react'
-import { SafeAreaView } from 'react-native'
-import { Carousel, CarouselItem, useIndex } from '@hrloca/swipii'
+import React, { useState } from 'react'
 
-import BottomNavigationAction from '@material-ui/core/BottomNavigationAction'
-import BottomNavigation from '@material-ui/core/BottomNavigation'
-import Paper from '@material-ui/core/Paper'
 import Box from '@material-ui/core/Box'
 import AppBar from '@material-ui/core/AppBar'
 import Toolbar from '@material-ui/core/Toolbar'
@@ -15,12 +10,14 @@ import Container from '@material-ui/core/Container'
 import { useTheme } from '@material-ui/core/styles'
 import useMediaQuery from '@material-ui/core/useMediaQuery'
 
-import FormatListBulletedIcon from '@material-ui/icons/FormatListBulleted'
-import LocalMoviesIcon from '@material-ui/icons/LocalMovies'
 import AddIcon from '@material-ui/icons/Add'
 
 import { useManegeDots, useSelectorState } from '../state'
 import { DotAnimator, DotDrawer, DotSelector, DotList } from './'
+
+import Drawer from '@material-ui/core/SwipeableDrawer'
+import Close from '@material-ui/icons/Close'
+import List from '@material-ui/icons/FormatListBulleted'
 
 export const Contents = () => {
   const theme = useTheme()
@@ -29,8 +26,8 @@ export const Contents = () => {
   const { startSelectSheet } = useSelectorState()
   const { dots, setDot, removeDot } = useManegeDots()
 
+  const [openModal, setOpenModal] = useState(false)
   const [imagePath, setImagePath] = useState(dots[0].src)
-  const { setIndex, length, index, next, prev } = useIndex(2, 0)
   const selectDot = (src: string, name: string) => {
     setDot({
       src,
@@ -43,17 +40,11 @@ export const Contents = () => {
     <DotList
       onDelete={removeDot}
       onSelect={(i) => {
-        setIndex(0)
+        setOpenModal(false)
         setImagePath(dots[i].src)
       }}
     />
   )
-
-  useEffect(() => {
-    if (matches) {
-      setIndex(0)
-    }
-  }, [matches])
 
   return (
     <Container
@@ -76,7 +67,7 @@ export const Contents = () => {
           <IconButton
             color="inherit"
             onClick={() => {
-              setIndex(1)
+              setOpenModal(true)
               startSelectSheet()
             }}
           >
@@ -87,29 +78,31 @@ export const Contents = () => {
 
       {!matches ? (
         <>
-          <Carousel length={length} index={index} onNext={next} onPrev={prev}>
-            <CarouselItem>
-              <Box>
-                <DotAnimator size={128} src={imagePath} />
-              </Box>
-            </CarouselItem>
-            <CarouselItem>{list}</CarouselItem>
-          </Carousel>
-
-          <Paper sx={{ position: 'fixed', bottom: 0, left: 0, right: 0 }} elevation={3}>
-            <SafeAreaView>
-              <BottomNavigation
-                showLabels
-                value={index}
-                onChange={(_, newValue) => {
-                  setIndex(newValue)
-                }}
-              >
-                <BottomNavigationAction label="view" icon={<LocalMoviesIcon />} />
-                <BottomNavigationAction label="dots" icon={<FormatListBulletedIcon />} />
-              </BottomNavigation>
-            </SafeAreaView>
-          </Paper>
+          <Box>
+            <Grid container>
+              <Grid item ml="auto">
+                <IconButton onClick={() => setOpenModal(true)}>
+                  <List />
+                </IconButton>
+              </Grid>
+            </Grid>
+            <DotAnimator size={128} src={imagePath} />
+          </Box>
+          <Drawer
+            onOpen={() => console.log('onopen')}
+            anchor="right"
+            open={openModal}
+            onClose={() => setOpenModal(false)}
+          >
+            <Grid container direction="column">
+              <Grid item ml="auto">
+                <IconButton onClick={() => setOpenModal(false)}>
+                  <Close />
+                </IconButton>
+              </Grid>
+            </Grid>
+            {list}
+          </Drawer>
         </>
       ) : (
         <Grid container spacing={2} style={{ height: '100%', flexShrink: 0 }}>

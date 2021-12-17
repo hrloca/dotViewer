@@ -8,6 +8,7 @@ import Play from '@material-ui/icons/PlayArrow'
 import SkipPrev from '@material-ui/icons/SkipPrevious'
 import SkipNext from '@material-ui/icons/SkipNext'
 import SlowMotionVideo from '@material-ui/icons/SlowMotionVideo'
+import ListIcon from '@material-ui/icons/FormatListBulleted'
 import Repeat from '@material-ui/icons/Repeat'
 
 type ControllerProps = {
@@ -17,6 +18,7 @@ type ControllerProps = {
   onNext: () => void
   onSlow: () => void
   onRepeat: () => void
+  onList: () => void
   isPlaying: boolean
   isRepeat: boolean
   speed: number
@@ -30,6 +32,7 @@ export const Controller: React.FC<ControllerProps> = ({
   onSlow,
   onRepeat,
   isPlaying,
+  onList,
   isRepeat,
   speed,
 }) => {
@@ -69,6 +72,12 @@ export const Controller: React.FC<ControllerProps> = ({
       <Grid item>
         <IconButton onClick={() => onRepeat()}>
           <Repeat color={isRepeat ? 'primary' : undefined} />
+        </IconButton>
+      </Grid>
+
+      <Grid item ml="auto">
+        <IconButton color="inherit" onClick={onList}>
+          <ListIcon />
         </IconButton>
       </Grid>
     </Grid>
