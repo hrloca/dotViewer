@@ -12,7 +12,7 @@ import { App } from './components'
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#ec407a',
+      main: '#eee',
     },
     secondary: {
       main: '#66bb6a',
