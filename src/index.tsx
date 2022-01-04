@@ -7,7 +7,7 @@ import { ThemeProvider, createTheme } from '@material-ui/core/styles'
 import { initializeState } from './state'
 import './manifest.json'
 
-import { Contents } from './components/Contents'
+import { App } from './components'
 
 const theme = createTheme({
   palette: {
@@ -31,7 +31,7 @@ const Root = () => {
   return (
     <RecoilRoot initializeState={initializeState}>
       <ThemeProvider theme={theme}>
-        <Contents />
+        <App />
       </ThemeProvider>
     </RecoilRoot>
   )

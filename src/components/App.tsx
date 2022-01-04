@@ -13,13 +13,16 @@ import useMediaQuery from '@material-ui/core/useMediaQuery'
 import AddIcon from '@material-ui/icons/Add'
 
 import { useManegeDots, useSelectorState } from '../state'
-import { DotAnimator, DotDrawer, DotSelector, DotList } from './'
+import { DotAnimator } from './DotAnimator'
+import { DotDrawer } from './DotDrawer'
+import { DotSheetSelector } from './DotSelector'
+import { DotList } from './DotList'
 
 import Drawer from '@material-ui/core/SwipeableDrawer'
 import Close from '@material-ui/icons/Close'
 import List from '@material-ui/icons/FormatListBulleted'
 
-export const Contents = () => {
+export const App = () => {
   const theme = useTheme()
   const matches = useMediaQuery(theme.breakpoints.up('md'))
 
@@ -119,7 +122,7 @@ export const Contents = () => {
         </Grid>
       )}
 
-      <DotSelector onSelect={selectDot} />
+      <DotSheetSelector onSelect={selectDot} />
     </Container>
   )
 }

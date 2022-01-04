@@ -14,7 +14,7 @@ export type DotSelectorProps = {
   onSelect: (src: string, name: string) => void
 }
 
-export const DotSelector: FC<DotSelectorProps> = ({ onSelect }) => {
+export const DotSheetSelector: FC<DotSelectorProps> = ({ onSelect }) => {
   const { state, selectedSheet, editName, decided, idle } = useSelectorState({
     onEdited: (src, name) => {
       onSelect(src, name)

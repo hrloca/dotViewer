@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import { styled } from '@material-ui/system'
-import { map, DotTarget } from '../../hooks/useDotSheet'
+import { map, DotTarget } from '../../dots'
 import { useAnimator } from '../../hooks/useAnimator'
 import { DotDrawer } from '../DotDrawer'
 import { Slider } from '../Slider'
 
 import { animations } from '../../dots/animations'
 import { Controller } from './Controller'
-import { AspectRatio } from '../AspectRatio'
+import { AspectRatio } from '../utility'
 import { countup, countdown } from '../../libs'
 
 import Drawer from '@material-ui/core/SwipeableDrawer'
